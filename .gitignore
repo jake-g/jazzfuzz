@@ -5,3 +5,5 @@ old/
 .DS_Store
 *todo.tsv
 *auth*.json
+index_sample.html
+*glossary.tsv

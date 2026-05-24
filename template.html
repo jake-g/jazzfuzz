@@ -9,14 +9,10 @@
     <!-- See: https://github.com/justinribeiro/lite-youtube -->
     <!-- "rel=0&modestbranding=1&enablejsapi=1" hides the related videos -->
     <!-- enablejsapi=1 is for script.js api calls to work -->
-    <!-- posterquality="maxresdefault" for higher res on big screen -->
+    <!-- posterquality="maxresdefault" for higher res on big screen (Warning: 4.2x heavier/slower than default hqdefault) -->
     <!-- autoplay=0 turn off autoplay -->
-     <!-- TODO: see if slower to load  -->
-    <lite-youtube params="rel=0&modestbranding=1&enablejsapi=1&autoplay=0"
-      videoid="VideoId of first track in playlist" 
-      playlistid="PlaylistId of album"
-      posterquality="maxresdefault"
-    ></lite-youtube>
+    <lite-youtube params="rel=0&modestbranding=1&enablejsapi=1&autoplay=0" videoid="VideoId of first track in playlist"
+      playlistid="PlaylistId of album" posterquality="maxresdefault"></lite-youtube>
   </div>
   <main>
     <h3>Musicians:</h3>
@@ -34,8 +30,8 @@
     </ul>
     <h3>Track List:</h3>
     <ol>
-      <li>Track #1 - Track name (duration)</li>
-      <li>Track #2 - Track name (duration)</li>
+      <li>Track name (duration)</li>
+      <li>Track name (duration)</li>
     </ol>
     <p>album is the #th album by insert text. It was released on date</p>
     <p>
