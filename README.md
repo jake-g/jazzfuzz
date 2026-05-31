@@ -3,8 +3,8 @@
 A sonic portal to a curated selection of cosmic jazz albums. This site features detailed information about each album, including the musicians involved, production credits, track lists, and embedded YouTube Music players.
 
 ## Live Site
-The custom domain `jazzfuzz.club` is no longer active. The site is now hosted on GitHub Pages:
-[https://jake-g.github.io/jazzfuzz.club/](https://jake-g.github.io/jazzfuzz.club/)
+The site is hosted on GitHub Pages:
+[https://jake-g.github.io/jazzfuzz/](https://jake-g.github.io/jazzfuzz/)
 
 ## Features
 - **Curated Catalog:** A list of favorite jazz albums with cover art, release details, track lists, and personnel details.

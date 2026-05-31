@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Deep cosmic gradient for the portal backdrop -->
+    <radialGradient id="portal-bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#18112d" />
+      <stop offset="75%" stop-color="#0b0716" />
+      <stop offset="100%" stop-color="#05030a" />
+    </radialGradient>
+    
+    <!-- Warm analog gold/orange gradient for the main 'J' / Sax wave -->
+    <linearGradient id="fuzz-orange" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF4B2B" />
+      <stop offset="60%" stop-color="#FF8008" />
+      <stop offset="100%" stop-color="#FFC837" />
+    </linearGradient>
+
+    <!-- Cosmic violet gradient for the 'F' soundwave and outer glow -->
+    <linearGradient id="cosmic-pink" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7F00FF" />
+      <stop offset="100%" stop-color="#FF007F" />
+    </linearGradient>
+
+    <!-- Displacement filter to create a physical "analog fuzz" distortion -->
+    <filter id="analog-distortion" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="9" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+    
+    <!-- Ethereal neon glow filter -->
+    <filter id="ethereal-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Base Portal Circle -->
+  <circle cx="256" cy="256" r="240" fill="url(#portal-bg)" stroke="url(#cosmic-pink)" stroke-width="6" />
+
+  <!-- Fuzzy Concentric Vinyl Grooves/Cosmic Rings -->
+  <g stroke="#ffffff" stroke-opacity="0.08" fill="none" stroke-width="2.5" filter="url(#analog-distortion)">
+    <circle cx="256" cy="256" r="195" stroke-dasharray="15, 20, 40, 15" />
+    <circle cx="256" cy="256" r="155" stroke-dasharray="60, 30, 15, 45" />
+    <circle cx="256" cy="256" r="115" stroke-dasharray="8, 8" />
+  </g>
+
+  <!-- Central "JF" / Cosmic Saxophone & Soundwave Motif -->
+  <g filter="url(#ethereal-glow)">
+    <g filter="url(#analog-distortion)">
+      <!-- The Stylized 'J' (representing a Saxophone silhouette / Cosmic Loop) -->
+      <path d="M 285 115 
+               C 285 115, 195 115, 195 240 
+               C 195 325, 240 385, 310 385 
+               C 365 385, 385 345, 385 300 
+               C 385 265, 360 245, 335 245
+               C 305 245, 285 268, 288 295
+               C 290 312, 305 328, 322 328" 
+            fill="none" 
+            stroke="url(#fuzz-orange)" 
+            stroke-width="28" 
+            stroke-linecap="round" 
+            stroke-linejoin="round" />
+
+      <!-- The 'F' Crossbar (representing a fuzzy, warm Soundwave) -->
+      <path d="M 140 205 
+               Q 210 160, 280 205 
+               T 420 205" 
+            fill="none" 
+            stroke="url(#cosmic-pink)" 
+            stroke-width="22" 
+            stroke-linecap="round" />
+    </g>
+  </g>
+
+  <!-- Ethereal Star Sparks & Dust -->
+  <g fill="#ffffff" opacity="0.7">
+    <circle cx="120" cy="135" r="3" />
+    <circle cx="390" cy="145" r="4" />
+    <circle cx="145" cy="345" r="2.5" />
+    <circle cx="350" cy="380" r="3" />
+    <!-- Golden space sparkles -->
+    <path d="M 256 65 L 258 71 L 264 72 L 258 73 L 256 79 L 254 73 L 248 72 L 254 71 Z" fill="#FFEAA7" />
+    <path d="M 125 275 L 126 278 L 129 279 L 126 280 L 125 283 L 124 280 L 121 279 L 124 278 Z" fill="#FFEAA7" opacity="0.8" />
+  </g>
+</svg>
