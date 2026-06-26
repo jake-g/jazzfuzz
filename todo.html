@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jazz Fuzz - Todo Albums</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: monospace;
+      padding: 5% 10%;
+      margin: 0;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 5px;
+      letter-spacing: -0.5px;
+    }
+    p {
+      color: #888;
+      margin-bottom: 30px;
+      font-size: 13px;
+    }
+    .nav-links {
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+    .nav-links a {
+      color: #fff;
+      text-decoration: underline;
+      margin-right: 15px;
+    }
+    .nav-links a:hover {
+      color: #ccc;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #222;
+    }
+    th {
+      color: #888;
+      cursor: pointer;
+      user-select: none;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+    th:hover {
+      color: #fff;
+    }
+    tr:hover td {
+      background-color: #111;
+    }
+    a {
+      color: #ccc;
+      text-decoration: underline;
+    }
+    a:hover {
+      color: #fff;
+    }
+    .sort-icon {
+      margin-left: 5px;
+      font-size: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-links">
+    <a href="index.html">← Back to Catalog</a>
+    <a href="glossary.html">Glossary Index</a>
+    <a href="https://github.com/jake-g/jazzfuzz/edit/main/albums_todo.tsv" target="_blank" style="float: right;">Suggest Additions on GitHub ↗</a>
+  </div>
+  <h1>Todo Albums Queue</h1>
+  <p>A list of albums queued for evaluation, researched with library ratings and popularity scores. Click headers to sort.</p>
+
+  <table id="todo-table">
+    <thead>
+      <tr id="table-headers"></tr>
+    </thead>
+    <tbody id="table-body">
+      <tr><td colspan="100%">Loading data...</td></tr>
+    </tbody>
+  </table>
+
+  <script>
+    let currentData = [];
+    let headers = [];
+    let sortDirection = {};
+
+    async function loadTable() {
+      try {
+        const response = await fetch('albums_todo.tsv');
+        const tsvText = await response.text();
+        parseAndRender(tsvText);
+      } catch (error) {
+        document.getElementById('table-body').innerHTML = `<tr><td colspan="100%" style="color:red;">Error loading TSV: ${error.message}</td></tr>`;
+      }
+    }
+
+    function parseAndRender(tsvText) {
+      const lines = tsvText.split(/\r?\n/).filter(line => line.trim() !== '');
+      if (lines.length === 0) return;
+
+      headers = lines[0].split('\t').map(h => h.trim());
+      currentData = lines.slice(1).map(line => {
+        const cols = line.split('\t');
+        let rowObj = {};
+        headers.forEach((header, idx) => {
+          rowObj[header] = cols[idx] !== undefined ? cols[idx].trim() : '';
+        });
+        return rowObj;
+      });
+
+      renderHeaders();
+      renderBody(currentData);
+    }
+
+    function renderHeaders() {
+      const headerRow = document.getElementById('table-headers');
+      headerRow.innerHTML = '';
+      headers.forEach(h => {
+        const th = document.createElement('th');
+        th.textContent = h;
+        th.addEventListener('click', () => sortTable(h));
+        const icon = document.createElement('span');
+        icon.className = 'sort-icon';
+        icon.id = `sort-icon-${h}`;
+        th.appendChild(icon);
+        headerRow.appendChild(th);
+      });
+    }
+
+    function renderBody(data) {
+      const tbody = document.getElementById('table-body');
+      tbody.innerHTML = '';
+      if (data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="100%">No records found.</td></tr>';
+        return;
+      }
+
+      data.forEach(row => {
+        const tr = document.createElement('tr');
+        headers.forEach(header => {
+          const td = document.createElement('td');
+          const val = row[header];
+
+          if (val.startsWith('http://') || val.startsWith('https://')) {
+            const link = document.createElement('a');
+            link.href = val;
+            link.target = '_blank';
+            link.textContent = 'Link';
+            td.appendChild(link);
+          } else {
+            td.textContent = val;
+          }
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+    }
+
+    function sortTable(column) {
+      const currentDir = sortDirection[column] || 'desc';
+      const newDir = currentDir === 'asc' ? 'desc' : 'asc';
+      sortDirection = { [column]: newDir };
+
+      headers.forEach(h => {
+        const icon = document.getElementById(`sort-icon-${h}`);
+        if (h === column) {
+          icon.textContent = newDir === 'asc' ? ' ▲' : ' ▼';
+        } else {
+          icon.textContent = '';
+        }
+      });
+
+      currentData.sort((a, b) => {
+        let valA = a[column];
+        let valB = b[column];
+
+        const numA = parseFloat(valA);
+        const numB = parseFloat(valB);
+        if (!isNaN(numA) && !isNaN(numB)) {
+          return newDir === 'asc' ? numA - numB : numB - numA;
+        }
+
+        valA = valA.toLowerCase();
+        valB = valB.toLowerCase();
+        if (valA < valB) return newDir === 'asc' ? -1 : 1;
+        if (valA > valB) return newDir === 'asc' ? 1 : -1;
+        return 0;
+      });
+
+      renderBody(currentData);
+    }
+
+    window.onload = loadTable;
+  </script>
+</body>
+</html>
