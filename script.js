@@ -1,15 +1,39 @@
 // Setup and interaction handlers for Jazz Fuzz site
 $(document).ready(function () {
-  // Collapse details handler
+  // Collapse details handler (Global)
   $("#collapse-main").click(function () {
-    $(this).toggleClass("inverted");
-    $("main").slideToggle("slow");
+    var button = $(this);
+    button.toggleClass("inverted");
+    var isCollapsed = button.hasClass("inverted");
+    if (isCollapsed) {
+      $("main").slideUp("slow");
+      $(".toggle-details-btn").text("Expand");
+      button.text("Show Details");
+    } else {
+      $("main").slideDown("slow");
+      $(".toggle-details-btn").text("Collapse");
+      button.text("Hide Details");
+    }
+  });
+
+  // Individual toggle details handler
+  $("#posts").on("click", ".toggle-details-btn", function () {
+    var button = $(this);
+    var main = button.closest("article").find("main");
+    main.slideToggle("slow", function () {
+      if (main.is(":visible")) {
+        button.text("Collapse");
+      } else {
+        button.text("Expand");
+      }
+    });
   });
 
   // Sort by artist handler
   $("#sort-artist-button").click(function () {
     $(this).addClass("inverted");
     $("#sort-year-button").removeClass("inverted");
+    $("#sort-popularity-button").removeClass("inverted");
     var posts = $("#posts").children("article");
     posts.sort(function (a, b) {
       var artistA = $(a)
@@ -41,6 +65,7 @@ $(document).ready(function () {
   $("#sort-year-button").click(function () {
     $(this).addClass("inverted");
     $("#sort-artist-button").removeClass("inverted");
+    $("#sort-popularity-button").removeClass("inverted");
     var posts = $("#posts").children("article");
     posts.sort(function (a, b) {
       var yearAStr = $(a).find("header h3:contains('Released:')").text();
@@ -54,8 +79,22 @@ $(document).ready(function () {
     $("#posts").empty().append(posts);
   });
 
+  // Sort by popularity handler
+  $("#sort-popularity-button").click(function () {
+    $(this).addClass("inverted");
+    $("#sort-artist-button").removeClass("inverted");
+    $("#sort-year-button").removeClass("inverted");
+    var posts = $("#posts").children("article");
+    posts.sort(function (a, b) {
+      var popA = parseInt($(a).attr("data-popularity") || "0", 10);
+      var popB = parseInt($(b).attr("data-popularity") || "0", 10);
+      return popB - popA; // Descending (highest popularity first)
+    });
+    $("#posts").empty().append(posts);
+  });
+
   // Trigger default state on page load
-  $("#sort-year-button").trigger("click");
+  $("#sort-popularity-button").trigger("click");
 
   // Player logic
   let currentPlayer = null;

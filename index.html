@@ -15,7 +15,7 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <script type="module" src="https://cdn.jsdelivr.net/npm/@justinribeiro/lite-youtube@1.5.0/lite-youtube.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-  <script type="text/javascript" src="script.js"></script>
+  <script type="text/javascript" src="script.js?v=2"></script>
   <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 
@@ -37,13 +37,14 @@
       <ul>
         <li><a href="#"><button id="sort-artist-button">Sort by Artist</button></a></li>
         <li><a href="#"><button id="sort-year-button">Sort by Year</button></a></li>
-        <li><a href="#"><button id="collapse-main">Show Details</button></a></li>
+        <li><a href="#"><button id="sort-popularity-button">Sort by Popularity</button></a></li>
+        <li><a href="#"><button id="collapse-main">Hide Details</button></a></li>
       </ul>
     </nav>
   </header>
 
   <section id="posts">
-    <article>
+    <article data-popularity="78">
       <header>
         <h2>Trust in the Lifeforce of the Deep Mystery</h2>
         <h3>By: The Comet Is Coming</h3>
@@ -57,6 +58,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -87,7 +89,7 @@
         <p>It received critical acclaim for its energetic, futuristic vision of jazz and its seamless blending of acoustic improvisation with electronic production.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="79">
       <header>
         <h2>Heaven and Earth</h2>
         <h3>By: Kamasi Washington</h3>
@@ -101,6 +103,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -151,7 +154,7 @@
           longtime collaborators.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="75">
       <header>
         <h2>The Return</h2>
         <h3>By: Kamaal Williams</h3>
@@ -165,6 +168,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -206,7 +210,7 @@
           experience.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="76">
       <header>
         <h2>Piano Nights</h2>
         <h3>By: Bohren & der Club of Gore</h3>
@@ -220,6 +224,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -258,7 +263,7 @@
           techniques and their preference for vintage instruments add to the timeless quality of their music.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="86">
       <header>
         <h2>Jaco Pastorius</h2>
         <h3>By: Jaco Pastorius</h3>
@@ -272,6 +277,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -308,7 +314,7 @@
         <p>The album features a legendary cast of fusion musicians and seamlessly blends virtuoso solo bass, high-octane R&B, and lush orchestral jazz.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="83">
       <header>
         <h2>Get Up With It</h2>
         <h3>By: Miles Davis</h3>
@@ -322,6 +328,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -377,7 +384,7 @@
           Davis' fans.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="93">
       <header>
         <h2>Head Hunters</h2>
         <h3>By: Herbie Hancock</h3>
@@ -391,6 +398,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -432,7 +440,7 @@
         </p>
       </main>
     </article>
-    <article>
+    <article data-popularity="92">
       <header>
         <h2>Journey in Satchidananda</h2>
         <h3>By: Alice Coltrane</h3>
@@ -446,6 +454,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -482,7 +491,7 @@
           of overdubbing and tape echo, were ahead of their time and have since been emulated by many artists.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="84">
       <header>
         <h2>Thembi</h2>
         <h3>By: Pharoah Sanders</h3>
@@ -496,6 +505,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -526,7 +536,7 @@
         <p>It remains a high-water mark of cosmic and spiritual jazz expression, balancing gentle beauty with intense free-jazz energy.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="98">
       <header>
         <h2>Bitches Brew</h2>
         <h3>By: Miles Davis</h3>
@@ -540,6 +550,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -576,7 +587,7 @@
         <p>The album was heavily edited by producer Teo Macero and became a massive commercial and critical landmark.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="85">
       <header>
         <h2>Red Clay</h2>
         <h3>By: Freddie Hubbard</h3>
@@ -590,6 +601,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -616,7 +628,7 @@
         <p>The album balances hard-swinging post-bop intensity with soulful, accessible melodies that became widely popular.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="72">
       <header>
         <h2>Jazz Raga</h2>
         <h3>By: Gábor Szabó</h3>
@@ -630,6 +642,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -671,7 +684,7 @@
           influence musicians to this day.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="71">
       <header>
         <h2>El sonido nuevo</h2>
         <h3>By: Cal Tjader & Eddie Palmieri</h3>
@@ -685,6 +698,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -720,7 +734,7 @@
         <p>It remains one of the most influential and successful Latin jazz collaborations, bridging American and Latin musical styles.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="100">
       <header>
         <h2>A Love Supreme</h2>
         <h3>By: John Coltrane</h3>
@@ -734,6 +748,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -770,7 +785,7 @@
           work of art to this day.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="89">
       <header>
         <h2>Idle Moments</h2>
         <h3>By: Grant Green</h3>
@@ -784,6 +799,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -831,7 +847,7 @@
           or jazz music in general.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="95">
       <header>
         <h2>Getz/Gilberto</h2>
         <h3>By: Stan Getz and João Gilberto</h3>
@@ -845,6 +861,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -890,7 +907,7 @@
         </p>
       </main>
     </article>
-    <article>
+    <article data-popularity="80">
       <header>
         <h2>Mingus Plays Piano</h2>
         <h3>By: Charles Mingus</h3>
@@ -904,6 +921,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -942,7 +960,7 @@
         </p>
       </main>
     </article>
-    <article>
+    <article data-popularity="89">
       <header>
         <h2>Midnight Blue</h2>
         <h3>By: Kenny Burrell</h3>
@@ -956,6 +974,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -986,7 +1005,7 @@
         <p>The opening track "Chitlins con Carne" has become a jazz standard and has been covered extensively.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="88">
       <header>
         <h2>Ballads</h2>
         <h3>By: John Coltrane</h3>
@@ -1000,6 +1019,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1039,7 +1059,7 @@
           genre.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="97">
       <header>
         <h2>The Black Saint and the Sinner Lady</h2>
         <h3>By: Charles Mingus</h3>
@@ -1053,6 +1073,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1094,7 +1115,7 @@
           captivate audiences today.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="83">
       <header>
         <h2>Duke Ellington & John Coltrane</h2>
         <h3>By: Duke Ellington & John Coltrane</h3>
@@ -1108,6 +1129,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1138,7 +1160,7 @@
         <p>Coltrane's lyrical performance on the opening track "In a Sentimental Mood" is widely considered a masterpiece of ballad playing.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="82">
       <header>
         <h2>Monk's Dream</h2>
         <h3>By: Thelonious Monk</h3>
@@ -1152,6 +1174,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1181,7 +1204,7 @@
         <p>His angular piano chords, silence-driven pacing, and playful melodies are displayed here in pristine sound quality.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="89">
       <header>
         <h2>Undercurrent</h2>
         <h3>By: Bill Evans & Jim Hall</h3>
@@ -1195,6 +1218,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1229,7 +1253,7 @@
           perfect introduction to the music of Bill Evans and Jim Hall.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="84">
       <header>
         <h2>Money Jungle</h2>
         <h3>By: Duke Ellington, Charles Mingus, Max Roach</h3>
@@ -1243,6 +1267,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1279,7 +1304,7 @@
           styles. The album has had a lasting influence on jazz music and is a must-listen for any jazz enthusiast.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="82">
       <header>
         <h2>Tijuana Moods</h2>
         <h3>By: Charles Mingus</h3>
@@ -1293,6 +1318,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1324,7 +1350,7 @@
         <p>Seamlessly blending complex post-bop structures with Latin rhythms, flamenco castanets, street sounds, and bluesy shouts, Mingus famously called this "the best record I ever made."</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="80">
       <header>
         <h2>Jazz Samba</h2>
         <h3>By: Stan Getz & Charlie Byrd</h3>
@@ -1338,6 +1364,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1368,7 +1395,7 @@
         <p>Combining Stan Getz's lyrical cool jazz saxophone with Charlie Byrd's acoustic nylon-string guitar rhythms, the album reached number one on the pop charts and paved the way for subsequent Latin jazz collaborations.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="94">
       <header>
         <h2>Waltz for Debby</h2>
         <h3>By: Bill Evans Trio</h3>
@@ -1382,6 +1409,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1415,7 +1443,7 @@
           as a timeless and essential album in the history of jazz music.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="91">
       <header>
         <h2>Sunday at the Village Vanguard</h2>
         <h3>By: Bill Evans Trio</h3>
@@ -1429,6 +1457,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1455,7 +1484,7 @@
         <p>The album is a masterclass in trio democracy, where the bass and drums play active melodic roles alongside the piano.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="89">
       <header>
         <h2>The Blues and the Abstract Truth</h2>
         <h3>By: Oliver Nelson</h3>
@@ -1469,6 +1498,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1499,7 +1529,7 @@
         <p>It features a stellar septet and includes the definitive recording of the jazz standard "Stolen Moments".</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="94">
       <header>
         <h2>My Favorite Things</h2>
         <h3>By: John Coltrane</h3>
@@ -1513,6 +1543,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1540,7 +1571,7 @@
           countless musicians over the years and remains a timeless masterpiece.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="96">
       <header>
         <h2>Giant Steps</h2>
         <h3>By: John Coltrane</h3>
@@ -1554,6 +1585,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1584,7 +1616,7 @@
         <p>The title track's rapid, complex chord progression pushed hard bop to its harmonic limits, and the record also features the beautiful ballad "Naima".</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="91">
       <header>
         <h2>Sketches of Spain</h2>
         <h3>By: Miles Davis</h3>
@@ -1598,6 +1630,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1627,7 +1660,7 @@
         <p>It remains one of his most popular and critically celebrated works, showcasing his lyrical voice in a large orchestral setting.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="95">
       <header>
         <h2>Time Out</h2>
         <h3>By: The Dave Brubeck Quartet</h3>
@@ -1641,6 +1674,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1680,7 +1714,7 @@
           album.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="97">
       <header>
         <h2>Mingus Ah Um</h2>
         <h3>By: Charles Mingus</h3>
@@ -1694,6 +1728,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1728,7 +1763,7 @@
         <p>"Mingus Ah Um" is a career-defining masterpiece by bassist and composer Charles Mingus. Released in 1959, the album is a rich tribute to his musical ancestors (Ellington, Lester Young, Jelly Roll Morton) and features political protest ("Fables of Faubus") and gospel-infused swing ("Better Git It in Your Soul").</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="100">
       <header>
         <h2>Kind of Blue</h2>
         <h3>By: Miles Davis</h3>
@@ -1742,6 +1777,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1779,7 +1815,7 @@
           of jazz or the development of modern music.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="92">
       <header>
         <h2>Moanin'</h2>
         <h3>By: Art Blakey & The Jazz Messengers</h3>
@@ -1793,6 +1829,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1821,7 +1858,7 @@
         <p>It remains the gold standard for the Blue Note Records hard bop sound and one of the most accessible jazz records ever recorded.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="92">
       <header>
         <h2>Somethin' Else</h2>
         <h3>By: Cannonball Adderley</h3>
@@ -1835,6 +1872,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1874,7 +1912,7 @@
           recording of this timeless album.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="81">
       <header>
         <h2>Thelonious Alone in San Francisco</h2>
         <h3>By: Thelonious Monk</h3>
@@ -1888,6 +1926,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1923,7 +1962,7 @@
           explore the work of one of the most important figures in the history of jazz.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="89">
       <header>
         <h2>Ascenseur pour l'échafaud</h2>
         <h3>By: Miles Davis</h3>
@@ -1937,6 +1976,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1976,7 +2016,7 @@
           including a beautiful rendition of "On Green Dolphin Street" recorded in New York in May 1958 by Davis's legendary sextet.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="93">
       <header>
         <h2>Blue Train</h2>
         <h3>By: John Coltrane</h3>
@@ -1990,6 +2030,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2030,7 +2071,7 @@
           essential listening for any jazz fan and a must-have in any jazz collection.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="88">
       <header>
         <h2>'Round About Midnight</h2>
         <h3>By: Miles Davis</h3>
@@ -2044,6 +2085,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2072,7 +2114,7 @@
         <p>Highlights include their definitive take on Thelonious Monk's "'Round Midnight" and Red Garland's block chord piano styling.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="93">
       <header>
         <h2>Saxophone Colossus</h2>
         <h3>By: Sonny Rollins</h3>
@@ -2086,6 +2128,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2112,7 +2155,7 @@
         <p>It cemented his reputation as one of the greatest improvisers in jazz history.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="90">
       <header>
         <h2>Chet Baker Sings</h2>
         <h3>By: Chet Baker</h3>
@@ -2126,6 +2169,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2166,7 +2210,7 @@
           make it a must-listen for anyone interested in the vocal jazz genre.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="84">
       <header>
         <h2>Louis Armstrong Plays W.C. Handy</h2>
         <h3>By: Louis Armstrong</h3>
@@ -2180,6 +2224,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2223,7 +2268,7 @@
           anyone interested in the Dixieland jazz genre.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="83">
       <header>
         <h2>John Coltrane and Johnny Hartman</h2>
         <h3>By: John Coltrane and Johnny Hartman</h3>
@@ -2237,6 +2282,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2279,7 +2325,7 @@
           albums of all time.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="86">
       <header>
         <h2>Lady In Satin</h2>
         <h3>By: Billie Holiday</h3>
@@ -2293,6 +2339,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2337,7 +2384,7 @@
           and an essential album for fans of jazz and vocal music.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="88">
       <header>
         <h2>Pithecanthropus Erectus</h2>
         <h3>By: Charles Mingus</h3>
@@ -2351,6 +2398,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2377,7 +2425,7 @@
         <p>The title track depicts the rise and fall of the "first man to stand erect," using collective improvisation, horn shrieks, and tempo changes.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="82">
       <header>
         <h2>The Magnificent Charlie Parker</h2>
         <h3>By: Charlie Parker</h3>
@@ -2391,6 +2439,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2422,7 +2471,7 @@
         <p>Featuring his classic quintets with Miles Davis and Max Roach, this album showcases Parker's breathtaking speed, virtuosic phrasing, and harmonic breakthroughs that revolutionized jazz.</p>
       </main>
     </article>
-    <article>
+    <article data-popularity="86">
       <header>
         <h2>Masterpieces by Ellington</h2>
         <h3>By: Duke Ellington</h3>
@@ -2436,6 +2485,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2482,7 +2532,7 @@
 
       </main>
     </article>
-    <article>
+    <article data-popularity="87">
       <header>
         <h2>Hot Fives and Sevens</h2>
         <h3>By: Louis Armstrong</h3>
@@ -2496,6 +2546,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
+      <button class="toggle-details-btn">Collapse</button>
       <main>
         <h3>Musicians:</h3>
         <ul>

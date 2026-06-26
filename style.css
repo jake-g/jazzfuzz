@@ -52,7 +52,7 @@ h3 {
 
 /* hide by default */
 main {
-  display: none;
+  display: block;
 }
 
 nav {
