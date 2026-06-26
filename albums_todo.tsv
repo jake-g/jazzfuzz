@@ -1,41 +1,62 @@
-Album	Artist	Popularity	My Rating	Artist Avg Rating
-Ptah, the El Daoud	Alice Coltrane	88	3.75	3.51
-Art Pepper Meets the Rhythm Section	Art Pepper	89	4.0	3.42
-Unit Structures	Cecil Taylor	86		3.52
-Chet Is Back!	Chet Baker	85	3.56	3.6
-Return to Forever	Chick Corea	88		3.55
-Diz and Getz	Dizzy Gillespie and Stan Getz	83	4.0	3.51
-The Best of Django Reinhardt	Django Reinhardt	84	3.58	3.66
-Brown Rice	Don Cherry	84	3.12	3.49
-Ella and Louis	Ella Fitzgerald and Louis Armstrong	94		3.54
-Out to Lunch!	Eric Dolphy	95	3.4	3.51
-Deodato 2	Eumir Deodato	78		3.52
-Maiden Voyage	Herbie Hancock	94	3.6	3.51
-Thrust	Herbie Hancock	90	3.75	3.51
-Song for My Father	Horace Silver	93	3.6	3.53
-A Fickle Sonance	Jackie McLean	84		3.52
-Flight	James Brandon Lewis	79		3.52
-Suite for Max Brown	Jeff Parker	82	3.45	3.51
-The Epic	Kamasi Washington	92	3.74	3.54
-Sun Bear Concerts	Keith Jarrett	88	4.0	3.53
-The Mourning of a Star	Keith Jarrett	83	3.5	3.53
-The Real McCoy	McCoy Tyner	92		3.56
-Michael Brecker	Michael Brecker	82		3.53
-In a Silent Way	Miles Davis	97	3.25	3.64
-Endlessness	Nala Sinephro	83	3.5	3.53
-Space 1.8	Nala Sinephro	82	3.62	3.53
-SOURCE	Nubya Garcia	79	3.67	3.55
-The Shape of Jazz to Come	Ornette Coleman	96	4.0	3.5
-Karma	Pharoah Sanders	93	3.75	3.55
-iiyo iiyo iiyo	Sam Wilkes	78		3.52
-West Coast Jazz	Stan Getz	84	3.42	3.54
-Lanquidity	Sun Ra	87		3.48
-From the Stairwell	The Kilimanjaro Darkjazz Ensemble	83	3.75	3.6
-Adam's Apple	Wayne Shorter	91	3.93	3.59
-Juju	Wayne Shorter	92		3.59
-Speak No Evil	Wayne Shorter	95	4.0	3.59
-Heavy Weather	Weather Report	92	2.75	3.42
-Mysterious Traveller	Weather Report	88		3.42
-Kelly Blue	Wynton Kelly	86		3.51
-Standard Time, Vol. 1	Wynton Marsalis	82		3.53
-Black Focus	Yussef Kamaal	83	3.5	3.52
+Album	Artist	Year	Popularity	My Rating	Artist Avg Rating	skip_count	last_action
+In a Silent Way	Miles Davis	1969	97	3.25	3.64	0
+Out to Lunch!	Eric Dolphy	1964	95	3.4	3.51	0
+Maiden Voyage	Herbie Hancock	1965	94	3.6	3.51	0
+Ella and Louis	Ella Fitzgerald and Louis Armstrong	1956	94		3.54	0
+Karma	Pharoah Sanders	1969	93	3.75	3.55	0
+Song for My Father	Horace Silver	1964	93	3.6	3.53	0
+The Epic	Kamasi Washington	2015	92	3.74	3.54	0
+Heavy Weather	Weather Report	1977	92	2.75	3.42	0
+The Real McCoy	McCoy Tyner	1967	92		3.56	0
+Juju	Wayne Shorter	1964	92		3.59	0
+Adam's Apple	Wayne Shorter	1966	91	3.93	3.59	0
+Thrust	Herbie Hancock	1974	90	3.75	3.51	0
+Art Pepper Meets the Rhythm Section	Art Pepper	1957	89	4.0	3.42	0
+Sun Bear Concerts	Keith Jarrett	1978	88	4.0	3.53	0
+Mysterious Traveller	Weather Report	1974	88		3.42	0
+Return to Forever	Chick Corea	1972	88		3.55	0
+Ptah, the El Daoud	Alice Coltrane	1970	88	3.75	3.51	0
+Lanquidity	Sun Ra	1978	87		3.48	0
+Unit Structures	Cecil Taylor	1966	86		3.52	0
+Kelly Blue	Wynton Kelly	1959	86		3.51	0
+Chet Is Back!	Chet Baker	1962	85	3.56	3.6	0
+Brown Rice	Don Cherry	1977	84	3.12	3.49	0
+A Fickle Sonance	Jackie McLean	1962	84		3.52	0
+The Best of Django Reinhardt	Django Reinhardt	1960	84	3.58	3.66	0
+West Coast Jazz	Stan Getz	1955	84	3.42	3.54	0
+Endlessness	Nala Sinephro	2024	83	3.5	3.53	0
+Black Focus	Yussef Kamaal	2016	83	3.5	3.52	0
+From the Stairwell	The Kilimanjaro Darkjazz Ensemble	2011	83	3.75	3.6	0
+The Mourning of a Star	Keith Jarrett	1971	83	3.5	3.53	0
+Diz and Getz	Dizzy Gillespie and Stan Getz	1955	83	4.0	3.51	0
+Space 1.8	Nala Sinephro	2021	82	3.62	3.53	0
+Suite for Max Brown	Jeff Parker	2020	82	3.45	3.51	0
+Michael Brecker	Michael Brecker	1987	82		3.53	0
+Standard Time, Vol. 1	Wynton Marsalis	1987	82		3.53	0
+SOURCE	Nubya Garcia	2020	79	3.67	3.55	0
+Flight	James Brandon Lewis		79		3.52	0
+iiyo iiyo iiyo	Sam Wilkes	2024	78		3.52	0
+Deodato 2	Eumir Deodato	1973	78		3.52	0
+Mid Spiral	BADBADNOTGOOD	2024	50	3.72	3.6	0
+Black Classical Music	Yussef Dayes	2023	50	3.58	3.49	0
+Promises	Floating Points	2021	50	3.78	3.58	0
+KOKOROKO	KOKOROKO	2019	50	3.88	3.51	0
+IV	BADBADNOTGOOD	2016	50	3.91	3.6	0
+III	BADBADNOTGOOD	2014	50	3.89	3.6	0
+Black Earth	Bohren & der Club of Gore	2002	50	3.67	3.62	0
+All Of Me	Masayoshi Takanaka	1979	50	3.71	3.54	0
+Breezin'	Masayoshi Takanaka	1977	50		3.54	0
+Scenery	Ryo Fukui	1976	50	4.0	3.59	0
+Troupeau Bleu	Cortex	1975	50	3.64	3.48	0
+Cat	Hiroshi Suzuki	1975	50	3.7	3.56	0
+Places and Spaces	Donald Byrd	1975	50	3.29	3.5	0
+Windows	Jack Wilkins	1973	50		3.52	0
+Introspection	Luiz Bonfá	1972	50		3.55	0
+Visions	Grant Green	1971	50	4.0	3.59	0
+Solo Monk	Thelonious Monk	1965	50	3.75	3.63	0
+Guitar Forms	Kenny Burrell	1965	50	3.72	3.58	0
+A New Perspective	Donald Byrd	1964	50	3.7	3.5	0
+Coltrane's Sound	John Coltrane	1964	50	3.62	3.65	0
+Eastern Sounds	Yusef Lateef	1961	50	3.61	3.53	0
+Moanin'	Art Blakey	1959	50	3.92	3.55	0
+Django	The Modern Jazz Quartet	1953	50	3.81	3.57	0

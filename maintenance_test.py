@@ -95,6 +95,72 @@ class MaintenanceTest(unittest.TestCase):
         self.assertEqual(album["playlist_id"], "OLAK5uy_XYZ")
         self.assertEqual(album["track_count"], 2)
 
+    @mock.patch("os.path.exists")
+    def test_load_musicbee_tracks(self, mock_exists):
+        mock_exists.return_value = True
+        read_data = (
+            "Artist\tAlbum\tRating\n"
+            "Miles Davis\tKind of Blue\t5.0\n"
+            "John Coltrane\tA Love Supreme\t4.5\n"
+        )
+        with mock.patch("builtins.open", mock.mock_open(read_data=read_data)) as mock_file:
+            tracks = maintenance.load_musicbee_tracks("dummy_path")
+            self.assertEqual(len(tracks), 2)
+            self.assertEqual(tracks[0]["artist"], "Miles Davis")
+            self.assertEqual(tracks[0]["album"], "Kind of Blue")
+            self.assertEqual(tracks[0]["rating"], 5.0)
+
+    @mock.patch("maintenance.load_musicbee_tracks")
+    @mock.patch("os.path.exists")
+    def test_research_todos(self, mock_exists, mock_load):
+        mock_exists.return_value = True
+        mock_load.side_effect = [
+            [
+                {"artist": "Miles Davis", "album": "In a Silent Way", "rating": 5.0},
+                {"artist": "Miles Davis", "album": "In a Silent Way", "rating": 4.0},
+                {"artist": "Miles Davis", "album": "Bitches Brew", "rating": 3.0}
+            ],
+            [] # inbox empty
+        ]
+
+        read_data = (
+            "Album\tArtist\n"
+            "In a Silent Way\tMiles Davis\n"
+        )
+        m_open = mock.mock_open(read_data=read_data)
+        with mock.patch("builtins.open", m_open) as mock_file:
+            maintenance.research_todos("todo.tsv", "lib.tsv", "inbox.tsv")
+            # Verify open was called to write the output
+            mock_file.assert_any_call("todo.tsv", "w", encoding="utf-8", newline="")
+
+
+    def test_sort_tsv_file_by_criteria(self):
+        import tempfile
+        import os
+
+        fd, path = tempfile.mkstemp()
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as f:
+                f.write(
+                    "Album\tArtist\tReleased\tPopularity\n"
+                    "Kind of Blue\tMiles Davis\tAugust, 1959\t100\n"
+                    "Moanin'\tArt Blakey\tJanuary, 1959\t95\n"
+                    "Time Out\tDave Brubeck\tDecember, 1959\t98\n"
+                )
+
+            # Test "newest" sorting
+            maintenance.sort_tsv_file(path, "newest")
+
+            with open(path, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+
+            self.assertEqual(len(lines), 4)
+            self.assertIn("Kind of Blue", lines[1])  # Dec 1959 (tie-breaker pop 100)
+            self.assertIn("Time Out", lines[2])      # Dec 1959 (tie-breaker pop 98)
+            self.assertIn("Moanin'", lines[3])       # Jan 1959 (tie-breaker pop 95)
+        finally:
+            os.remove(path)
+
 
 if __name__ == "__main__":
     unittest.main()

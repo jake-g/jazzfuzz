@@ -34,22 +34,56 @@
       resonate in their most primal and authentic essence, embracing the very soul of the genre and transcending
       the boundaries of time and space</P>
     <nav>
-      <ul>
-        <li><a href="#"><button id="sort-artist-button">Sort by Artist</button></a></li>
-        <li><a href="#"><button id="sort-year-button">Sort by Year</button></a></li>
-        <li><a href="#"><button id="sort-popularity-button">Sort by Popularity</button></a></li>
-        <li><a href="#"><button id="collapse-main">Hide Details</button></a></li>
-      </ul>
+      <div class="menu-container">
+        <button class="menu-btn" id="sort-menu-btn">Sort v</button>
+        <button class="menu-btn" id="filter-menu-btn">Filter v</button>
+        <button id="collapse-main">Collapse</button>
+      </div>
+      <div class="menu-links">
+        <a href="glossary.html">Glossary</a> |
+        <a href="todo.html">Todo Queue</a> |
+        <a href="https://github.com/jake-g/jazzfuzz" target="_blank">GitHub</a>
+      </div>
+
+      <!-- Inline Panel for Sort Options -->
+      <div class="control-panel" id="sort-panel" style="display: none;">
+        <span class="panel-title">Sort By:</span>
+        <a href="#" id="sort-popularity-action" class="active">Popularity</a>
+        <a href="#" id="sort-year-action">Year</a>
+        <a href="#" id="sort-artist-action">Artist</a>
+      </div>
+
+      <!-- Inline Panel for Filters -->
+      <div class="control-panel" id="filter-panel" style="display: none;">
+        <!-- Decades -->
+        <div class="filter-group">
+          <span class="filter-group-title">Decades:</span>
+          <a href="#" class="filter-action active" data-filter-type="decade" data-filter-val="all">All Decades</a>
+          <span id="decade-filters" class="inline-filters"></span>
+        </div>
+        <!-- Genres -->
+        <div class="filter-group">
+          <span class="filter-group-title">Genres:</span>
+          <a href="#" class="filter-action active" data-filter-type="genre" data-filter-val="all">All Genres</a>
+          <span id="genre-filters" class="inline-filters"></span>
+        </div>
+        <!-- Artists -->
+        <div class="filter-group">
+          <span class="filter-group-title">Artists:</span>
+          <a href="#" class="filter-action active" data-filter-type="artist" data-filter-val="all">All Artists</a>
+          <span id="artist-filters" class="inline-filters"></span>
+        </div>
+      </div>
     </nav>
   </header>
 
   <section id="posts">
-    <article data-popularity="78">
+<article data-popularity="78">
       <header>
         <h2>Trust in the Lifeforce of the Deep Mystery</h2>
         <h3>By: The Comet Is Coming</h3>
         <h3>Released: March, 2019</h3>
-        <h3>Genre: Cosmic Jazz, Jazz Fusion, Electronica</h3>
+        <h3>Genre: Spiritual Jazz, Jazz Fusion, Electronic</h3>
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&modestbranding=1&enablejsapi=1&autoplay=0"
@@ -94,7 +128,7 @@
         <h2>Heaven and Earth</h2>
         <h3>By: Kamasi Washington</h3>
         <h3>Released: June, 2018</h3>
-        <h3>Genre: Jazz, Funk, Fusion</h3>
+        <h3>Genre: Jazz, Funk, Jazz Fusion</h3>
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&modestbranding=1&enablejsapi=1&autoplay=0"
@@ -159,7 +193,7 @@
         <h2>The Return</h2>
         <h3>By: Kamaal Williams</h3>
         <h3>Released: May, 2018</h3>
-        <h3>Genre: Jazz-funk, fusion, electronic</h3>
+        <h3>Genre: Jazz-Funk, Jazz Fusion, Electronic</h3>
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&modestbranding=1&enablejsapi=1&autoplay=0"
@@ -215,7 +249,7 @@
         <h2>Piano Nights</h2>
         <h3>By: Bohren & der Club of Gore</h3>
         <h3>Released: February, 2014</h3>
-        <h3>Genre: Dark jazz, ambient jazz, doom jazz</h3>
+        <h3>Genre: Dark Jazz, Ambient Jazz</h3>
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&modestbranding=1&enablejsapi=1&autoplay=0"
@@ -319,7 +353,7 @@
         <h2>Get Up With It</h2>
         <h3>By: Miles Davis</h3>
         <h3>Released: November, 1974</h3>
-        <h3>Genre: Jazz fusion, jazz-funk, avant-garde jazz</h3>
+        <h3>Genre: Jazz Fusion, Jazz-Funk, Avant-Garde Jazz</h3>
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&modestbranding=1&enablejsapi=1&autoplay=0"
@@ -445,7 +479,7 @@
         <h2>Journey in Satchidananda</h2>
         <h3>By: Alice Coltrane</h3>
         <h3>Released: March, 1971</h3>
-        <h3>Genre: Jazz, World Music</h3>
+        <h3>Genre: Jazz, World Fusion</h3>
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&modestbranding=1&enablejsapi=1&autoplay=0"
@@ -628,7 +662,44 @@
         <p>The album balances hard-swinging post-bop intensity with soulful, accessible melodies that became widely popular.</p>
       </main>
     </article>
-    <article data-popularity="72">
+        <article data-popularity="96">
+      <header>
+        <h2>Speak No Evil</h2>
+        <h3>By: Wayne Shorter</h3>
+        <h3>Released: 1966</h3>
+        <h3>Genre: Jazz</h3>
+      </header>
+      <div class="playerContainer">
+        <lite-youtube params="rel=0&amp;modestbranding=1&amp;enablejsapi=1&amp;autoplay=0"
+          videoid="oJoSrQ6iP0c"
+          playlistid="OLAK5uy_kfL_kVcmbbsQ7z-BYVjVU60m3nW9y-8qI"
+          posterquality="maxresdefault"
+        ></lite-youtube>
+      </div>
+      <button class="toggle-details-btn">Collapse</button>
+      <main>
+        <h3>Musicians:</h3>
+        <ul>
+          <li>(Add musicians manually)</li>
+        </ul>
+        <h3>Production Credits:</h3>
+        <ul>
+          <li>(Add production credits manually)</li>
+        </ul>
+        <h3>Track List:</h3>
+        <ol>
+          <li>Witch Hunt (Remastered1998/Rudy Van Gelder Edition) (8:12)</li>
+          <li>Fee-Fi-Fo-Fum (Remastered1998/Rudy Van Gelder Edition) (5:55)</li>
+          <li>Dance Cadaverous (Remastered1998/Rudy Van Gelder Edition) (6:46)</li>
+          <li>Speak No Evil (Remastered1998/Rudy Van Gelder Edition) (8:24)</li>
+          <li>Infant Eyes (Remastered1998/Rudy Van Gelder Edition) (6:55)</li>
+          <li>Wild Flower (Remastered1998/Rudy Van Gelder Edition) (6:07)</li>
+          <li>Dance Cadaverous (Alternate Take / Remastered1998/Rudy Van Gelder Edition) (6:36)</li>
+        </ol>
+      </main>
+    </article>
+
+<article data-popularity="72">
       <header>
         <h2>Jazz Raga</h2>
         <h3>By: Gábor Szabó</h3>
@@ -689,7 +760,7 @@
         <h2>El sonido nuevo</h2>
         <h3>By: Cal Tjader & Eddie Palmieri</h3>
         <h3>Released: 1966</h3>
-        <h3>Genre: Latin Jazz, Salsa, Boogaloo</h3>
+        <h3>Genre: Latin Jazz</h3>
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&modestbranding=1&enablejsapi=1&autoplay=0"
@@ -1064,7 +1135,7 @@
         <h2>The Black Saint and the Sinner Lady</h2>
         <h3>By: Charles Mingus</h3>
         <h3>Released: March, 1963</h3>
-        <h3>Genre: Jazz, Avant-garde Jazz</h3>
+        <h3>Genre: Jazz, Avant-Garde Jazz</h3>
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&modestbranding=1&enablejsapi=1&autoplay=0"
@@ -1204,7 +1275,8 @@
         <p>His angular piano chords, silence-driven pacing, and playful melodies are displayed here in pristine sound quality.</p>
       </main>
     </article>
-    <article data-popularity="89">
+
+<article data-popularity="89">
       <header>
         <h2>Undercurrent</h2>
         <h3>By: Bill Evans & Jim Hall</h3>
@@ -1400,7 +1472,7 @@
         <h2>Waltz for Debby</h2>
         <h3>By: Bill Evans Trio</h3>
         <h3>Released: 1962</h3>
-        <h3>Genre: Jazz, Post-bop</h3>
+        <h3>Genre: Jazz, Post-Bop</h3>
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&modestbranding=1&enablejsapi=1&autoplay=0"
@@ -1576,7 +1648,7 @@
         <h2>Giant Steps</h2>
         <h3>By: John Coltrane</h3>
         <h3>Released: February, 1960</h3>
-        <h3>Genre: Hard Bop, Sheets of Sound</h3>
+        <h3>Genre: Hard Bop</h3>
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&modestbranding=1&enablejsapi=1&autoplay=0"
@@ -1621,7 +1693,7 @@
         <h2>Sketches of Spain</h2>
         <h3>By: Miles Davis</h3>
         <h3>Released: July, 1960</h3>
-        <h3>Genre: Third Stream, Cool Jazz, Flamenco Jazz</h3>
+        <h3>Genre: Third Stream, Cool Jazz, Latin Jazz</h3>
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&modestbranding=1&enablejsapi=1&autoplay=0"
@@ -1665,7 +1737,7 @@
         <h2>Time Out</h2>
         <h3>By: The Dave Brubeck Quartet</h3>
         <h3>Released: December, 1959</h3>
-        <h3>Genre: Jazz, Cool Jazz, West Coast Jazz, Progressive Jazz</h3>
+        <h3>Genre: Jazz, Cool Jazz, West Coast Jazz</h3>
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&modestbranding=1&enablejsapi=1&autoplay=0"
@@ -1714,6 +1786,42 @@
           album.</p>
       </main>
     </article>
+    <article data-popularity="96">
+      <header>
+        <h2>The Shape of Jazz to Come</h2>
+        <h3>By: Ornette Coleman</h3>
+        <h3>Released: November, 1959</h3>
+        <h3>Genre: Avant-Garde Jazz, Free Jazz</h3>
+      </header>
+      <div class="playerContainer">
+        <lite-youtube params="rel=0&amp;modestbranding=1&amp;enablejsapi=1&amp;autoplay=0"
+          videoid="b_HFdIK_g78"
+          playlistid="OLAK5uy_mOQEXImXqnMIZuatlLUdiO3OTTox-6pS8"
+          posterquality="maxresdefault"
+        ></lite-youtube>
+      </div>
+      <button class="toggle-details-btn">Collapse</button>
+      <main>
+        <h3>Musicians:</h3>
+        <ul>
+          <li>(Add musicians manually)</li>
+        </ul>
+        <h3>Production Credits:</h3>
+        <ul>
+          <li>(Add production credits manually)</li>
+        </ul>
+        <h3>Track List:</h3>
+        <ol>
+          <li>Lonely Woman (5:00)</li>
+          <li>Eventually (4:24)</li>
+          <li>Peace (9:05)</li>
+          <li>Focus on Sanity (6:52)</li>
+          <li>Congeniality (6:48)</li>
+          <li>Chronology (6:04)</li>
+        </ol>
+      </main>
+    </article>
+
     <article data-popularity="97">
       <header>
         <h2>Mingus Ah Um</h2>
@@ -1858,7 +1966,43 @@
         <p>It remains the gold standard for the Blue Note Records hard bop sound and one of the most accessible jazz records ever recorded.</p>
       </main>
     </article>
-    <article data-popularity="92">
+        <article data-popularity="94">
+      <header>
+        <h2>Milestones</h2>
+        <h3>By: Miles Davis</h3>
+        <h3>Released: 1958</h3>
+        <h3>Genre: Jazz</h3>
+      </header>
+      <div class="playerContainer">
+        <lite-youtube params="rel=0&amp;modestbranding=1&amp;enablejsapi=1&amp;autoplay=0"
+          videoid="Cvqc9QSGkUk"
+          playlistid="OLAK5uy_kXgAzhiJ84e6Apw50udX1TmeVFGBqlZN0"
+          posterquality="maxresdefault"
+        ></lite-youtube>
+      </div>
+      <button class="toggle-details-btn">Collapse</button>
+      <main>
+        <h3>Musicians:</h3>
+        <ul>
+          <li>(Add musicians manually)</li>
+        </ul>
+        <h3>Production Credits:</h3>
+        <ul>
+          <li>(Add production credits manually)</li>
+        </ul>
+        <h3>Track List:</h3>
+        <ol>
+          <li>Dr. Jekyll (Mono Version) (feat. John Coltrane, Cannonball Adderley, Red Garland & Paul Chambers) (5:52)</li>
+          <li>Sid's Ahead (Mono Version) (feat. John Coltrane, Cannonball Adderley, Red Garland & Paul Chambers) (13:08)</li>
+          <li>Two Bass Hit (Mono Version) (feat. John Coltrane, Cannonball Adderley, Red Garland & Paul Chambers) (5:15)</li>
+          <li>Milestones (Mono Version) (feat. John Coltrane, Cannonball Adderley, Red Garland & Paul Chambers) (5:45)</li>
+          <li>Billy Boy (Mono Version) (feat. John Coltrane, Cannonball Adderley, Red Garland & Paul Chambers) (7:15)</li>
+          <li>Straight, No Chaser (Mono Version) (feat. John Coltrane, Cannonball Adderley, Red Garland & Paul Chambers) (10:42)</li>
+        </ol>
+      </main>
+    </article>
+
+<article data-popularity="92">
       <header>
         <h2>Somethin' Else</h2>
         <h3>By: Cannonball Adderley</h3>
@@ -2215,7 +2359,7 @@
         <h2>Louis Armstrong Plays W.C. Handy</h2>
         <h3>By: Louis Armstrong</h3>
         <h3>Released: September, 1954</h3>
-        <h3>Genre: Jazz, Dixieland</h3>
+        <h3>Genre: Jazz, New Orleans Jazz</h3>
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&modestbranding=1&enablejsapi=1&autoplay=0"
@@ -2537,7 +2681,7 @@
         <h2>Hot Fives and Sevens</h2>
         <h3>By: Louis Armstrong</h3>
         <h3>Released: 1928 (Recorded 1925-1928)</h3>
-        <h3>Genre: Jazz, New Orleans Jazz, Dixieland</h3>
+        <h3>Genre: Jazz, New Orleans Jazz</h3>
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&modestbranding=1&enablejsapi=1&autoplay=0"
