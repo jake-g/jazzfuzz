@@ -60,6 +60,12 @@ CLASSIC_JAZZ_ARTISTS = {
     "charlie parker",
     "duke ellington",
     "modern jazz quartet",
+    "yusef lateef",
+    "dorothy ashby",
+    "horace silver",
+    "art pepper",
+    "keith jarrett",
+    "luiz bonfa",
     "art pepper",
     "dizzy gillespie",
     "django reinhardt",
@@ -697,55 +703,9 @@ def research_todos(todo_file: str, library_file: str, inbox_file: str) -> None:
     logger.info("Todo TSV updated with ratings and popularity successfully.")
 
 
-def fetch_album_metadata_from_llm(artist: str, album: str) -> Dict[str, Any]:
-    """Uses agentapi to lookup original release year, genres, and popularity score.
-
-    Args:
-        artist: Album artist.
-        album: Album title.
-
-    Returns:
-        Dict mapping metadata fields (popularity, original_year, genres).
-    """
-    prompt = f"""You are a music metadata expert. For the following album, look up and return:
-1. The original release/recording year (e.g. 1959 for Ornette Coleman's "The Shape of Jazz to Come").
-2. A list of 1 to 3 curated genres (comma-separated, e.g. "Free Jazz, Avant-Garde Jazz").
-3. A global popularity/acclaim score from 1 to 100 (where 100 is maximum acclaim/masterpiece, based on RateYourMusic and BestEverAlbums).
-
-Artist: {artist}
-Album: {album}
-
-Return the result STRICTLY as a JSON object with these keys:
-"popularity" (integer), "original_year" (integer), "genres" (string).
-Do not include markdown formatting or any wrapper text. Just the JSON object.
-"""
-    logger.info(
-        "Querying LLM via agentapi for metadata of '%s - %s'...", artist, album
-    )
-    try:
-        res = subprocess.run(
-            ["agentapi", "new-conversation", "--model=flash", prompt],
-            capture_output=True,
-            text=True,
-            timeout=20,
-        )
-        if res.returncode == 0:
-            output = res.stdout.strip()
-            start = output.find("{")
-            end = output.rfind("}") + 1
-            if start != -1 and end > start:
-                data = json.loads(output[start:end])
-                logger.info("Retrieved LLM metadata: %s", data)
-                return data
-    except Exception as e:
-        logger.warning("Failed to fetch LLM metadata: %s", e)
-
-    return {}
-
-
 def promote_album_to_html(
     artist: str, title: str, popularity: str, details: Dict
-) -> None:
+) -> bool:
     """Formats and inserts a promoted album into index.html chronologically.
 
     Args:
@@ -754,30 +714,29 @@ def promote_album_to_html(
         popularity: Popularity score (1-100).
         details: Dictionary containing YouTube Music metadata (tracks, year,
           etc).
+
+    Returns:
+        True if the promotion was successful, False otherwise.
     """
     logger.info("Promoting '%s - %s' to index.html...", artist, title)
 
     if not os.path.exists(INDEX_FILE):
         logger.error("index.html not found: %s", INDEX_FILE)
-        return
+        return False
 
-    # Dynamic original recording year & genres lookup via LLM knowledge
-    llm_meta = fetch_album_metadata_from_llm(artist, title)
-    if llm_meta:
-        popularity = str(llm_meta.get("popularity", popularity))
-        year = (
-            str(llm_meta.get("original_year"))
-            if llm_meta.get("original_year")
-            else details.get("year", "Unknown")
+    # Check duplicate
+    existing = extract_album_entries_from_html(INDEX_FILE)
+    key = get_album_id(artist, title)
+    if key in existing:
+        logger.warning(
+            "Album '%s - %s' is already present in index.html! Cancelling promotion.",
+            artist,
+            title,
         )
-        genre = (
-            llm_meta.get("genres")
-            if llm_meta.get("genres")
-            else details.get("genre", "Jazz")
-        )
-    else:
-        year = details.get("year", "Unknown")
-        genre = details.get("genre", "Jazz")
+        return False
+
+    year = details.get("year", "Unknown")
+    genre = details.get("genre", "Jazz")
 
     playlist_id = details.get("playlistId", "")
     video_id = details.get("firstVideoId", "")
@@ -875,6 +834,7 @@ def promote_album_to_html(
         f.write(new_content)
 
     logger.info("Successfully promoted '%s' to index.html.", title)
+    return True
 
 
 def todo_wizard(todo_file: str) -> None:
@@ -901,6 +861,8 @@ def todo_wizard(todo_file: str) -> None:
     if not os.path.exists(todo_file):
         logger.error("Todo TSV file not found: %s", todo_file)
         return
+
+    existing_albums = extract_album_entries_from_html(INDEX_FILE)
 
     # Read current todos
     todos = []
@@ -969,11 +931,27 @@ def todo_wizard(todo_file: str) -> None:
         print("=========================================================")
         print(f"  Combined Score:     {score:.1f}")
         print(f"  Popularity Score:   {popularity}/100")
+
+        # Count mentions of artist in catalog and todo list
+        artist_lower = artist.strip().lower()
+        catalog_count = sum(
+            1
+            for info in existing_albums.values()
+            if info["artist"].strip().lower() == artist_lower
+        )
+        todo_count = sum(
+            1
+            for t in remaining_todos
+            if t["Artist"].strip().lower() == artist_lower
+        )
+        print(f"  Catalog Reviews:    {catalog_count} reviews")
+        print(f"  Todo Queue:         {todo_count} items")
+
         my_rating_str = "N/A"
         if my_rating:
             try:
                 val = float(my_rating)
-                my_rating_str = f"{val:.2f}/5.0 ({val * 20:.0f}/100)"
+                my_rating_str = f"{val * 20:.0f}/100"
             except ValueError:
                 pass
 
@@ -981,7 +959,7 @@ def todo_wizard(todo_file: str) -> None:
         if artist_avg:
             try:
                 val = float(artist_avg)
-                artist_avg_str = f"{val:.2f}/5.0 ({val * 20:.0f}/100)"
+                artist_avg_str = f"{val * 20:.0f}/100"
             except ValueError:
                 pass
 
@@ -1006,12 +984,12 @@ def todo_wizard(todo_file: str) -> None:
                 continue
 
         choice = (
-            input("Select Action - [P]romote, [S]kip, [D]elete, [Q]uit: ")
+            input("Select Action - [Y]es/Promote, [N]o/Skip, [D]elete, [Q]uit: ")
             .strip()
             .lower()
         )
 
-        if choice == "p":
+        if choice == "y":
             print(f"\nSearching YouTube Music for: {artist} - {album}...")
             match = get_youtube_album(yt, artist, album)
             if match:
@@ -1046,18 +1024,21 @@ def todo_wizard(todo_file: str) -> None:
                     .lower()
                 )
                 if confirm != "n":
-                    promote_album_to_html(artist, album, popularity, match)
-                    remaining_todos.remove(item)
-                    save_wizard_state(todo_file, remaining_todos)
-                    # Automatically update glossary
-                    export_tsv_glossary(INDEX_FILE, "albums_glossary.tsv")
-                    print("Album successfully promoted to site!\n")
+                    success = promote_album_to_html(artist, album, popularity, match)
+                    if success:
+                        remaining_todos.remove(item)
+                        save_wizard_state(todo_file, remaining_todos)
+                        # Automatically update glossary
+                        export_tsv_glossary(INDEX_FILE, "albums_glossary.tsv")
+                        print("Album successfully promoted to site!\n")
+                    else:
+                        print("Promotion failed or album already exists. Kept in todo.\n")
                 else:
                     print("Promotion cancelled. Kept in todo.\n")
             else:
                 print("No matching album details found on YouTube Music.\n")
 
-        elif choice == "s":
+        elif choice == "n":
             item["skip_count"] = str(skip_count + 1)
             item["last_action"] = "skipped"
             save_wizard_state(todo_file, remaining_todos)
