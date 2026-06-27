@@ -34,16 +34,16 @@ $(document).ready(function () {
   // Collapse details handler (Global)
   $("#collapse-main").click(function () {
     var button = $(this);
-    button.toggleClass("inverted");
-    var isCollapsed = button.hasClass("inverted");
-    if (isCollapsed) {
-      $("main").slideUp(150);
-      $(".toggle-details-btn").text("Expand");
-      button.text("Expand");
-    } else {
+    button.toggleClass("active");
+    var isExpanded = button.hasClass("active");
+    if (isExpanded) {
       $("main").slideDown(150);
       $(".toggle-details-btn").text("Collapse");
-      button.text("Collapse");
+      button.text("-");
+    } else {
+      $("main").slideUp(150);
+      $(".toggle-details-btn").text("Expand");
+      button.text("+");
     }
   });
 
@@ -51,6 +51,21 @@ $(document).ready(function () {
     e.preventDefault();
     $("html, body").animate({ scrollTop: 0 }, 400);
   });
+
+  // Theme Toggle Handler
+  $("#theme-toggle-btn").click(function () {
+    $("html").toggleClass("light-mode");
+    var isLight = $("html").hasClass("light-mode");
+    $(this).html(isLight ? "&#9632;" : "&#9633;");
+    localStorage.setItem("theme", isLight ? "light" : "dark");
+  });
+
+  // Restore saved theme on load
+  var savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "light") {
+    $("html").addClass("light-mode");
+    $("#theme-toggle-btn").html("&#9632;");
+  }
 
   // Individual toggle details handler
   $("#posts").on("click", ".toggle-details-btn", function () {
@@ -164,7 +179,9 @@ $(document).ready(function () {
         return yearB - yearA;
       }
     });
-    $("#posts").empty().append(posts);
+    posts.each(function (index) {
+      $(this).css("order", index);
+    });
   }
 
   // Sort actions click handlers
@@ -454,11 +471,21 @@ $(document).ready(function () {
     }
   }
 
+  function getSortedVisibleArticles() {
+    var visible = $("#posts").children("article:visible");
+    var sorted = visible.toArray().sort(function (a, b) {
+      var orderA = parseInt($(a).css("order") || "0", 10);
+      var orderB = parseInt($(b).css("order") || "0", 10);
+      return orderA - orderB;
+    });
+    return $(sorted);
+  }
+
   function updatePlayerControls(isPlaying) {
     $("#play-pause-btn").text(isPlaying ? "||" : ">");
     $("#shuffle-btn").toggleClass("active", isShuffle);
     if (currentArticle) {
-      var visibleArticles = $("#posts").children("article:visible");
+      var visibleArticles = getSortedVisibleArticles();
       var currentIndex = visibleArticles.index(currentArticle);
       if (isShuffle) {
         $("#prev-btn").prop("disabled", playbackHistory.length === 0);
@@ -474,7 +501,7 @@ $(document).ready(function () {
   }
 
   function playNextTrack() {
-    var visibleArticles = $("#posts").children("article:visible");
+    var visibleArticles = getSortedVisibleArticles();
     if (visibleArticles.length === 0) return;
 
     if (isShuffle) {
@@ -501,7 +528,7 @@ $(document).ready(function () {
   }
 
   function playPrevTrack() {
-    var visibleArticles = $("#posts").children("article:visible");
+    var visibleArticles = getSortedVisibleArticles();
     if (visibleArticles.length === 0) return;
 
     if (isShuffle) {
@@ -569,7 +596,7 @@ $(document).ready(function () {
         $("html, body").animate({ scrollTop: offset }, 250);
       }
     } else {
-      var firstArticle = $("#posts").children("article:visible").first();
+      var firstArticle = getSortedVisibleArticles().first();
       if (firstArticle.length) {
         playArticle(firstArticle);
       }
@@ -591,7 +618,7 @@ $(document).ready(function () {
     }
 
     if (!isCurrentlyPlaying) {
-      var visibleArticles = $("#posts").children("article:visible");
+      var visibleArticles = getSortedVisibleArticles();
       if (visibleArticles.length) {
         var randomIndex = Math.floor(Math.random() * visibleArticles.length);
         var randomArticle = visibleArticles.eq(randomIndex);
@@ -654,7 +681,7 @@ $(document).ready(function () {
     var tocList = $("#albums-toc-list");
     tocList.empty();
 
-    var visibleArticles = $("#posts").children("article:visible");
+    var visibleArticles = getSortedVisibleArticles();
     if (visibleArticles.length === 0) {
       tocList.append('<div style="padding: 10px; color: #888; font-size: 11px; font-family: monospace;">No matching albums</div>');
       return;

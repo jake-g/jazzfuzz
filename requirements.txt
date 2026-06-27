@@ -4,3 +4,4 @@ python-Levenshtein
 ytmusicapi
 black
 requests
+pre-commit

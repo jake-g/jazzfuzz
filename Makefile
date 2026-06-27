@@ -1,4 +1,12 @@
-.PHONY: help server clean format match-albums test-links benchmark export-tsv test research-todos todo-wizard import-album sort-tsv validate-years check verify sort-todo
+.PHONY: help setup venv pre-commit server clean format match-albums test-links benchmark export-tsv test research-todos todo-wizard import-album sort-tsv validate-years check verify sort-todo
+
+# Define virtual environment path
+VENV := venv
+ifeq ($(wildcard $(VENV)/bin/python),)
+	PYTHON := python3
+else
+	PYTHON := $(VENV)/bin/python
+endif
 
 # Detect OS for cross-platform in-place sed
 UNAME_S := $(shell uname -s)
@@ -33,45 +41,45 @@ help:
 
 server:
 	@echo "Starting local dev server with CORS enabled at http://localhost:3001 ..."
-	@python3 -c "$$CORS_SERVER"
+	@$(PYTHON) -c "$$CORS_SERVER"
 
 match-albums:
-	python3 maintenance.py match --html index.html
+	$(PYTHON) maintenance.py match --html index.html
 
 test-links:
-	python3 maintenance.py test-links --html index.html
+	$(PYTHON) maintenance.py test-links --html index.html
 
 benchmark:
-	python3 maintenance.py benchmark --html index.html
+	$(PYTHON) maintenance.py benchmark --html index.html
 
 export-tsv:
-	python3 maintenance.py export-tsv --html index.html --tsv albums_glossary.tsv
+	$(PYTHON) maintenance.py export-tsv --html index.html --tsv albums_glossary.tsv
 
 research-todos:
-	python3 maintenance.py research-todos --todo albums_todo.tsv
+	$(PYTHON) maintenance.py research-todos --todo albums_todo.tsv
 
 todo-wizard:
-	python3 maintenance.py todo-wizard --todo albums_todo.tsv
+	$(PYTHON) maintenance.py todo-wizard --todo albums_todo.tsv
 
 import-album:
 	@if [ -z "$(ARTIST)" ] || [ -z "$(ALBUM)" ]; then \
 		echo "Usage: make import-album ARTIST=\"Artist Name\" ALBUM=\"Album Title\" [POPULARITY=50]"; \
 		exit 1; \
 	fi
-	python3 maintenance.py import-album --artist "$(ARTIST)" --album "$(ALBUM)" --popularity "$(or $(POPULARITY),50)"
+	$(PYTHON) maintenance.py import-album --artist "$(ARTIST)" --album "$(ALBUM)" --popularity "$(or $(POPULARITY),50)"
 
 sort-tsv:
 	@if [ -z "$(FILE)" ] || [ -z "$(BY)" ]; then \
 		echo "Usage: make sort-tsv FILE=\"filename.tsv\" BY=\"newest|oldest|popular|default\""; \
 		exit 1; \
 	fi
-	python3 maintenance.py sort-tsv --file "$(FILE)" --by "$(BY)"
+	$(PYTHON) maintenance.py sort-tsv --file "$(FILE)" --by "$(BY)"
 
 validate-years:
-	python3 maintenance.py validate-years --html index.html
+	$(PYTHON) maintenance.py validate-years --html index.html
 
 sort-todo:
-	python3 maintenance.py sort-tsv --file albums_todo.tsv --by default
+	$(PYTHON) maintenance.py sort-tsv --file albums_todo.tsv --by default
 
 validate-placeholders:
 	@echo "Checking for unresolved (Add ... manually) placeholders in index.html..."
@@ -83,30 +91,48 @@ validate-placeholders:
 	@echo "✅ No placeholders found."
 
 validate-playlists:
-	python3 maintenance.py validate-playlists --html index.html
+	$(PYTHON) maintenance.py validate-playlists --html index.html
 
-check: format sort-todo test test-links validate-years validate-placeholders validate-playlists
-	@echo "✅ ALL MAINTENANCE CHECKS PASSED SUCCESSFULLY!"
+check: format sort-todo pre-commit test test-links validate-years validate-placeholders validate-playlists
+	@echo "✅ Checks Passed!"
 
 verify: check
 
+pre-commit:
+	@echo "Running pre-commit hooks..."
+	@if $(PYTHON) -c "import pre_commit" >/dev/null 2>&1; then \
+		$(VENV)/bin/pre-commit run --all-files; \
+	else \
+		echo "pre-commit is not installed in virtual environment. Skipping hooks."; \
+	fi
+
 test:
-	python3 -m unittest discover -p "*_test.py"
+	$(PYTHON) -m unittest discover -p "*_test.py"
 
 format:
 	@echo "Formatting Python files with black..."
-	@if command -v black >/dev/null 2>&1; then \
-		black maintenance.py maintenance_test.py; \
+	@if $(PYTHON) -c "import black" >/dev/null 2>&1; then \
+		$(PYTHON) -m black maintenance.py maintenance_test.py; \
 	else \
 		echo "black is not installed. Skipping auto-formatting."; \
 	fi
-	@echo "Trimming trailing whitespace on HTML, JS, CSS, PY, TSV, MD..."
-	find . -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" -o -name "*.py" -o -name "*.tsv" -o -name "*.md" \) -not -path "*/old/*" -exec $(SED_INPLACE) -e 's/[[:space:]]*$$//' {} +
+	@echo "Trimming trailing whitespace on HTML, JS, CSS, PY, MD..."
+	find . -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" -o -name "*.py" -o -name "*.md" \) -not -path "*/old/*" -exec $(SED_INPLACE) -e 's/[[:space:]]*$$//' {} +
+
+setup: venv
+
+venv:
+	@echo "Creating Python virtual environment in $(VENV)..."
+	python3 -m venv $(VENV)
+	$(VENV)/bin/pip install --upgrade pip
+	$(VENV)/bin/pip install -r requirements.txt
+	@echo "✅ Virtual environment successfully initialized!"
 
 clean:
 	@echo "🧹 Cleaning up pycache files..."
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type f -name "*.pyc" -delete
+	rm -rf $(VENV)
 	@echo "✅ Clean completed."
 
 define CORS_SERVER

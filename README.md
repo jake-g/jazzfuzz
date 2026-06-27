@@ -34,8 +34,9 @@ Run targets using `make <target>`:
 
 | Target | Description |
 | :--- | :--- |
+| `setup` | Initialize Python virtual environment and install all requirements |
 | `server` | Launch local development server at `http://localhost:3001` |
-| `verify` | **Catch-all check:** formats files, runs unit tests, audits links and classic years |
+| `verify` | **Catch-all check:** formats files, runs pre-commit hooks, unit tests, audits links and classic years |
 | `research-todos` | Match todo list albums against local MusicBee DB rating statistics |
 | `todo-wizard` | Interactive wizard to screen, skip, delete, or promote todo albums |
 | `import-album` | Import album from YTMusic directly: `make import-album ARTIST="..." ALBUM="..." [POPULARITY=50]` |

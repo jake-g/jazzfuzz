@@ -12,19 +12,19 @@
 
   <g filter="url(#analog-fuzz)">
     <!-- Minimalist white silhouette/lines of a saxophone -->
-    <path d="M 160 120 
-             L 160 300 
+    <path d="M 160 120
+             L 160 300
              C 160 380, 220 400, 270 400
              C 320 400, 360 350, 360 280
              C 360 240, 330 220, 300 220
              C 270 220, 250 245, 255 275
-             C 260 295, 280 310, 300 310" 
-          fill="none" 
-          stroke="#ffffff" 
-          stroke-width="26" 
-          stroke-linecap="round" 
+             C 260 295, 280 310, 300 310"
+          fill="none"
+          stroke="#ffffff"
+          stroke-width="26"
+          stroke-linecap="round"
           stroke-linejoin="round" />
-    
+
     <!-- Cosmic waves / sound waves coming out of the bell -->
     <path d="M 330 250
              C 370 210, 420 220, 450 180"
@@ -32,7 +32,7 @@
           stroke="#ffffff"
           stroke-width="12"
           stroke-linecap="round" />
-          
+
     <path d="M 310 200
              C 350 150, 400 170, 430 110"
           fill="none"
@@ -46,7 +46,7 @@
           stroke="#ffffff"
           stroke-width="6"
           stroke-linecap="round" />
-          
+
     <!-- Concentric orbital stars/dust -->
     <circle cx="256" cy="256" r="205" fill="none" stroke="#ffffff" stroke-width="3" stroke-dasharray="15 35 60 40" opacity="0.8" />
     <circle cx="256" cy="256" r="170" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="8 8" opacity="0.6" />

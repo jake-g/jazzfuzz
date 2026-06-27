@@ -6,3 +6,5 @@ old/
 *todo.tsv
 *auth*.json
 index_sample.html
+venv/
+.venv/
