@@ -37,14 +37,16 @@ Run targets using `make <target>`:
 | `setup` | Initialize Python virtual environment and install all requirements |
 | `server` | Launch local development server at `http://localhost:3001` |
 | `verify` | **Catch-all check:** formats files, runs pre-commit hooks, unit tests, audits links and classic years |
-| `research-todos` | Match todo list albums against local MusicBee DB rating statistics |
-| `todo-wizard` | Interactive wizard to screen, skip, delete, or promote todo albums |
+| `research-queue` | Match queue list albums against local MusicBee DB rating statistics |
+| `queue-wizard` | Interactive wizard to screen, skip, delete, or promote queue albums |
 | `import-album` | Import album from YTMusic directly: `make import-album ARTIST="..." ALBUM="..." [POPULARITY=50]` |
-| `sort-todo` | Enforce popularity/year descending sort order on `albums_todo.tsv` |
+| `sort-queue` | Enforce popularity/year descending sort order on `albums_queue.tsv` |
 | `sort-tsv` | Sort any TSV file: `make sort-tsv FILE="..." BY="newest\|oldest\|popular\|default"` |
 | `test-links` | Validate all YouTube playlist/video links in the index file |
 | `validate-years` | Scan index to check if classic albums use modern reissue years |
 | `export-tsv` | Export active catalog to `albums_glossary.tsv` |
+| `export-playlist` | Sync catalog albums sorted by popularity to your YouTube Music public playlist |
+| `refresh-auth` | Prompt to paste browser cURL command and refresh local `browser.json` cookies |
 | `test` | Run all Python unit tests |
 | `format` | Trim trailing whitespaces and run code formatting |
 | `clean` | Remove python bytecode cache |

@@ -34,7 +34,11 @@ except ImportError:
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
-HEADER_FILE = "oauth.json"
+# Look for authentication config (prefer browser.json cookies, fall back to oauth.json token)
+HEADER_FILE = "browser.json"
+if not os.path.exists(HEADER_FILE):
+    HEADER_FILE = "oauth.json"
+
 INDEX_FILE = "index.html"
 
 CLASSIC_JAZZ_ARTISTS = {
@@ -673,6 +677,262 @@ def load_all_musicbee_tracks() -> List[Dict]:
     return tracks
 
 
+def export_playlist_to_ytmusic(html_file: str) -> None:
+    """Exports all catalog albums sorted by popularity to YouTube Music.
+
+    Albums are sorted by popularity descending.
+    """
+    logger.info("Extracting album entries from %s...", html_file)
+    albums_dict = extract_album_entries_from_html(html_file)
+    if not albums_dict:
+        logger.error("No albums found to export.")
+        return
+
+    # Convert to list and sort by popularity descending
+    albums = list(albums_dict.values())
+
+    def get_popularity(item):
+        try:
+            return int(item.get("popularity") or "50")
+        except ValueError:
+            return 50
+
+    albums.sort(key=get_popularity, reverse=True)
+    logger.info("Sorted %d albums by popularity descending.", len(albums))
+
+    # Initialize YTMusic
+    try:
+        from ytmusicapi import YTMusic
+
+        yt = YTMusic(HEADER_FILE) if os.path.exists(HEADER_FILE) else YTMusic()
+    except Exception as e:
+        logger.error("Failed to initialize YTMusic: %s", e)
+        return
+
+    # Find or create playlist
+    playlist_name = "Jazz Fuzz Albums"
+    logger.info("Searching for playlist '%s'...", playlist_name)
+    try:
+        playlists = yt.get_library_playlists(limit=100)
+    except Exception as e:
+        logger.error("Failed to query library playlists: %s", e)
+        return
+
+    target_playlist_id = None
+    for pl in playlists:
+        if pl["title"] == playlist_name:
+            target_playlist_id = pl["playlistId"]
+            logger.info("Found existing playlist with ID: %s", target_playlist_id)
+            break
+
+    if not target_playlist_id:
+        logger.info("Creating new public playlist '%s'...", playlist_name)
+        try:
+            target_playlist_id = yt.create_playlist(
+                title=playlist_name,
+                description="Jazz Fuzz complete albums catalog, sorted by popularity.",
+                privacy_status="PUBLIC",
+            )
+            logger.info("Created playlist with ID: %s", target_playlist_id)
+        except Exception as e:
+            logger.error("Failed to create playlist: %s", e)
+            return
+
+    # Collect video/track IDs from all albums
+    all_video_ids = []
+
+    for idx, album in enumerate(albums):
+        playlist_id = album.get("playlist_id")
+        video_id = album.get("video_id")
+        title = album.get("title")
+        artist = album.get("artist")
+
+        logger.info(
+            "[%d/%d] Fetching tracks for: %s - %s",
+            idx + 1,
+            len(albums),
+            artist,
+            title,
+        )
+
+        if playlist_id:
+            try:
+                playlist_data = yt.get_playlist(playlist_id, limit=300)
+                tracks = playlist_data.get("tracks", [])
+                album_video_ids = [t["videoId"] for t in tracks if t.get("videoId")]
+                if album_video_ids:
+                    all_video_ids.extend(album_video_ids)
+                    logger.info(
+                        "  Found %d tracks in album playlist.", len(album_video_ids)
+                    )
+                else:
+                    if video_id:
+                        all_video_ids.append(video_id)
+                        logger.info("  No tracks found; using featured video ID.")
+            except Exception as e:
+                logger.warning("  Error fetching playlist %s: %s", playlist_id, e)
+                if video_id:
+                    all_video_ids.append(video_id)
+                    logger.info("  Falling back to featured video ID.")
+        elif video_id:
+            all_video_ids.append(video_id)
+            logger.info("  No playlist ID; using featured video ID.")
+
+    if not all_video_ids:
+        logger.error("No tracks or video IDs collected.")
+        return
+
+    # Clear existing playlist tracks
+    try:
+        logger.info("Clearing existing tracks from playlist...")
+        playlist_details = yt.get_playlist(target_playlist_id, limit=3000)
+        existing_tracks = playlist_details.get("tracks", [])
+        if existing_tracks:
+            items_to_remove = []
+            for t in existing_tracks:
+                if "videoId" in t and "setVideoId" in t:
+                    items_to_remove.append(
+                        {"videoId": t["videoId"], "setVideoId": t["setVideoId"]}
+                    )
+            for i in range(0, len(items_to_remove), 100):
+                chunk = items_to_remove[i : i + 100]
+                yt.remove_playlist_items(target_playlist_id, chunk)
+            logger.info(
+                "Successfully removed %d tracks from playlist.", len(items_to_remove)
+            )
+    except Exception as e:
+        logger.warning("Failed to clear playlist: %s. Continuing...", e)
+
+    # Add all tracks to playlist in chunks of 100
+    logger.info(
+        "Adding %d tracks to '%s' playlist...", len(all_video_ids), playlist_name
+    )
+    success_count = 0
+    for i in range(0, len(all_video_ids), 100):
+        chunk = all_video_ids[i : i + 100]
+        try:
+            yt.add_playlist_items(target_playlist_id, chunk)
+            success_count += len(chunk)
+            logger.info("  Added tracks %d-%d...", i + 1, i + len(chunk))
+        except Exception as e:
+            logger.error(
+                "  Error adding tracks chunk %d-%d: %s", i + 1, i + len(chunk), e
+            )
+
+    logger.info(
+        "🎉 Playlist export completed! Total tracks: %d/%d",
+        success_count,
+        len(all_video_ids),
+    )
+    print(f"PLAYLIST_ID={target_playlist_id}")
+
+    # Update index.html playlist-link href
+    try:
+        logger.info("Updating playlist link in %s...", html_file)
+        with open(html_file, "r", encoding="utf-8") as f:
+            html_content = f.read()
+
+        import re
+
+        # Pattern matches: <a href="[^"]*" ... id="playlist-link" ...>Playlist</a>
+        pattern = (
+            r'(<a\s+[^>]*href=")([^"]*)("[^>]*id="playlist-link"[^>]*>Playlist</a>)'
+        )
+        playlist_url = f"https://music.youtube.com/playlist?list={target_playlist_id}"
+        replacement = r"\g<1>" + playlist_url + r"\g<3>"
+        new_content, count = re.subn(pattern, replacement, html_content)
+        if count > 0:
+            with open(html_file, "w", encoding="utf-8") as f:
+                f.write(new_content)
+            logger.info(
+                "Successfully updated playlist link in %s to %s",
+                html_file,
+                playlist_url,
+            )
+        else:
+            logger.warning(
+                "Could not find element with id='playlist-link' to update in %s.",
+                html_file,
+            )
+    except Exception as e:
+        logger.error("Failed to update index.html: %s", e)
+
+
+def refresh_auth() -> None:
+    """Reads a cURL command from stdin, parses headers/cookies, and writes browser.json."""
+    print(
+        "Paste your full cURL command below. Press Enter twice or Ctrl+D when finished:\n"
+    )
+    lines = []
+    while True:
+        try:
+            line = input()
+            if not line.strip() and len(lines) > 0 and not lines[-1].endswith("\\"):
+                break
+            lines.append(line)
+        except (EOFError, KeyboardInterrupt):
+            break
+
+    curl_input = "\n".join(lines).split("--data")[0]
+    if not curl_input.strip():
+        logger.error("No input provided.")
+        return
+
+    import shlex
+
+    try:
+        tokens = shlex.split(curl_input)
+    except Exception as e:
+        logger.error("Failed to parse cURL input: %s", e)
+        return
+
+    headers = {}
+    cookies = ""
+    for i, token in enumerate(tokens):
+        if token in ("-H", "--header") and i + 1 < len(tokens):
+            header_str = tokens[i + 1]
+            if ":" in header_str:
+                key, val = header_str.split(":", 1)
+                headers[key.strip().lower()] = val.strip()
+        elif token in ("-b", "--cookie") and i + 1 < len(tokens):
+            cookies = tokens[i + 1]
+
+    if "authorization" not in headers:
+        logger.error("Could not find 'authorization' header in the pasted cURL!")
+        return
+
+    new_auth = {
+        "User-Agent": headers.get("user-agent", "Mozilla/5.0"),
+        "Accept": headers.get("accept", "*/*"),
+        "Accept-Language": headers.get("accept-language", "en-US,en;q=0.9"),
+        "Content-Type": headers.get("content-type", "application/json"),
+        "Authorization": headers["authorization"],
+        "X-Goog-AuthUser": headers.get("x-goog-authuser", "0"),
+        "x-origin": headers.get("x-origin", "https://music.youtube.com"),
+        "Cookie": cookies if cookies else headers.get("cookie", ""),
+    }
+
+    import json
+
+    with open("browser.json", "w", encoding="utf-8") as f:
+        json.dump(new_auth, f, indent=4)
+    logger.info("Successfully updated browser.json!")
+
+    # Test authentication
+    logger.info("Testing new authentication with ytmusic.get_history()...")
+    try:
+        from ytmusicapi import YTMusic
+
+        yt = YTMusic("browser.json")
+        history = yt.get_history()
+        logger.info(
+            "🎉 Authentication verified! Successfully loaded %d history items.",
+            len(history),
+        )
+    except Exception as e:
+        logger.error("❌ Authentication test failed: %s", e)
+
+
 def export_tsv_glossary(html_file: str, tsv_file: str) -> None:
     """Parses HTML and exports an index glossary of all albums to a TSV file.
 
@@ -787,7 +1047,7 @@ def research_todos(todo_file: str, library_file: str, inbox_file: str) -> None:
     """Researches todo albums against MusicBee ratings and popularity.
 
     Args:
-        todo_file: Path to albums_todo.tsv.
+        todo_file: Path to albums_queue.tsv.
         library_file: Path to musicbee_library.tsv.
         inbox_file: Path to musicbee_inbox.tsv.
     """
@@ -1044,14 +1304,14 @@ def todo_wizard(todo_file: str) -> None:
     """Runs the interactive todo wizard to evaluate and promote albums.
 
     Args:
-        todo_file: Path to albums_todo.tsv.
+        todo_file: Path to albums_queue.tsv.
     """
     print("=========================================================")
     print("🔍 Sync Ratings & Popularity")
     print("=========================================================")
     run_research = (
         input(
-            "Would you like to run 'research-todos' first to sync the latest ratings? [Y/n]: "
+            "Would you like to run 'research-queue' first to sync the latest ratings? [Y/n]: "
         )
         .strip()
         .lower()
@@ -1063,7 +1323,7 @@ def todo_wizard(todo_file: str) -> None:
         inbox_path = (
             "../music-library/music-sources-unified/db_assets/musicbee_inbox.tsv"
         )
-        print("Running research-todos...")
+        print("Running research-queue...")
         research_todos(todo_file, lib_path, inbox_path)
         print("Done researching. Proceeding to wizard.\n")
 
@@ -1453,13 +1713,22 @@ def main() -> None:
         "--tsv", type=str, default="albums_glossary.tsv", help="TSV output file"
     )
 
-    # research-todos subcommand
+    # export-playlist subcommand
+    playlist_export_parser = subparsers.add_parser(
+        "export-playlist",
+        help="Export all catalog albums sorted by popularity to a YouTube Music playlist",
+    )
+    playlist_export_parser.add_argument(
+        "--html", type=str, default=INDEX_FILE, help="Path to index.html to read"
+    )
+
+    # research-queue subcommand
     eval_parser = subparsers.add_parser(
-        "research-todos",
-        help="Research todo albums against MusicBee ratings and popularity",
+        "research-queue",
+        help="Research queue albums against MusicBee ratings and popularity",
     )
     eval_parser.add_argument(
-        "--todo", type=str, default="albums_todo.tsv", help="Path to todo TSV file"
+        "--queue", type=str, default="albums_queue.tsv", help="Path to queue TSV file"
     )
     eval_parser.add_argument(
         "--library",
@@ -1474,13 +1743,19 @@ def main() -> None:
         help="Path to MusicBee inbox TSV",
     )
 
-    # todo-wizard subcommand
+    # queue-wizard subcommand
     wizard_parser = subparsers.add_parser(
-        "todo-wizard",
-        help="Interactive CLI wizard to step through and evaluate todo albums",
+        "queue-wizard",
+        help="Interactive CLI wizard to step through and evaluate queue albums",
     )
     wizard_parser.add_argument(
-        "--todo", type=str, default="albums_todo.tsv", help="Path to todo TSV file"
+        "--queue", type=str, default="albums_queue.tsv", help="Path to queue TSV file"
+    )
+
+    # refresh-auth subcommand
+    subparsers.add_parser(
+        "refresh-auth",
+        help="Update local browser.json cookies by pasting a cURL command from your browser",
     )
 
     # import-album subcommand
@@ -1576,11 +1851,17 @@ def main() -> None:
     elif args.command == "export-tsv":
         export_tsv_glossary(args.html, args.tsv)
 
-    elif args.command == "research-todos":
-        research_todos(args.todo, args.library, args.inbox)
+    elif args.command == "export-playlist":
+        export_playlist_to_ytmusic(args.html)
 
-    elif args.command == "todo-wizard":
-        todo_wizard(args.todo)
+    elif args.command == "research-queue":
+        research_todos(args.queue, args.library, args.inbox)
+
+    elif args.command == "queue-wizard":
+        todo_wizard(args.queue)
+
+    elif args.command == "refresh-auth":
+        refresh_auth()
 
     elif args.command == "import-album":
         try:

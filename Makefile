@@ -1,4 +1,4 @@
-.PHONY: help setup venv pre-commit server clean format match-albums test-links benchmark export-tsv test research-todos todo-wizard import-album sort-tsv validate-years check verify sort-todo
+.PHONY: help setup venv pre-commit server clean format match-albums test-links benchmark export-tsv export-playlist refresh-auth test research-queue queue-wizard import-album sort-tsv validate-years check verify sort-queue
 
 # Define virtual environment path
 VENV := venv
@@ -22,21 +22,23 @@ help:
 	@echo "🌐 Jazz Fuzz Maintenance Console"
 	@echo "========================================================="
 	@echo "Available commands:"
-	@echo "  make server         - Launch local development server at http://localhost:3001"
-	@echo "  make match-albums   - Run the album matching tool (requires oauth.json)"
-	@echo "  make research-todos - Update todo albums TSV with MusicBee ratings and popularity"
-	@echo "  make todo-wizard    - Step through the todo list to skip, delete, or promote"
-	@echo "  make import-album   - Direct import of an album (ARTIST=\"...\" ALBUM=\"...\" [POPULARITY=50])"
-	@echo "  make sort-tsv       - Sort a TSV file (FILE=\"filename.tsv\" BY=\"newest|oldest|popular|default\")"
-	@echo "  make sort-todo      - Ensure albums_todo.tsv is sorted by default rules"
-	@echo "  make test-links     - Validate all YouTube playlist & video links in index.html"
-	@echo "  make validate-years - Check catalog for classic albums with reissue year anomalies"
-	@echo "  make check/verify   - Run all format, test, link verification, and year audits"
-	@echo "  make benchmark      - Benchmark loading times for poster image resolutions"
-	@echo "  make export-tsv     - Create a TSV glossary (index) of all albums"
-	@echo "  make test           - Run all Python unit tests"
-	@echo "  make format         - Clean up code styling and trim trailing whitespace"
-	@echo "  make clean          - Remove Python cache files"
+	@echo "  make server          - Launch local development server at http://localhost:3001"
+	@echo "  make match-albums    - Run the album matching tool (requires oauth.json)"
+	@echo "  make research-queue  - Update queue albums TSV with MusicBee ratings and popularity"
+	@echo "  make queue-wizard    - Step through the queue list to skip, delete, or promote"
+	@echo "  make import-album    - Direct import of an album (ARTIST=\"...\" ALBUM=\"...\" [POPULARITY=50])"
+	@echo "  make sort-tsv        - Sort a TSV file (FILE=\"filename.tsv\" BY=\"newest|oldest|popular|default\")"
+	@echo "  make sort-queue      - Ensure albums_queue.tsv is sorted by default rules"
+	@echo "  make test-links      - Validate all YouTube playlist & video links in index.html"
+	@echo "  make validate-years  - Check catalog for classic albums with reissue year anomalies"
+	@echo "  make check/verify    - Run all format, test, link verification, and year audits"
+	@echo "  make benchmark       - Benchmark loading times for poster image resolutions"
+	@echo "  make export-tsv      - Create a TSV glossary (index) of all albums"
+	@echo "  make export-playlist - Sync catalog albums to your YouTube Music public playlist"
+	@echo "  make refresh-auth    - Paste a browser cURL command to refresh session cookies"
+	@echo "  make test            - Run all Python unit tests"
+	@echo "  make format          - Clean up code styling and trim trailing whitespace"
+	@echo "  make clean           - Remove Python cache files"
 	@echo "========================================================="
 
 server:
@@ -55,11 +57,17 @@ benchmark:
 export-tsv:
 	$(PYTHON) maintenance.py export-tsv --html index.html --tsv albums_glossary.tsv
 
-research-todos:
-	$(PYTHON) maintenance.py research-todos --todo albums_todo.tsv
+export-playlist:
+	$(PYTHON) maintenance.py export-playlist --html index.html
 
-todo-wizard:
-	$(PYTHON) maintenance.py todo-wizard --todo albums_todo.tsv
+refresh-auth:
+	$(PYTHON) maintenance.py refresh-auth
+
+research-queue:
+	$(PYTHON) maintenance.py research-todos --todo albums_queue.tsv
+
+queue-wizard:
+	$(PYTHON) maintenance.py todo-wizard --todo albums_queue.tsv
 
 import-album:
 	@if [ -z "$(ARTIST)" ] || [ -z "$(ALBUM)" ]; then \
@@ -78,8 +86,8 @@ sort-tsv:
 validate-years:
 	$(PYTHON) maintenance.py validate-years --html index.html
 
-sort-todo:
-	$(PYTHON) maintenance.py sort-tsv --file albums_todo.tsv --by default
+sort-queue:
+	$(PYTHON) maintenance.py sort-tsv --file albums_queue.tsv --by default
 
 validate-placeholders:
 	@echo "Checking for unresolved (Add ... manually) placeholders in index.html..."
@@ -93,7 +101,7 @@ validate-placeholders:
 validate-playlists:
 	$(PYTHON) maintenance.py validate-playlists --html index.html
 
-check: format sort-todo pre-commit test test-links validate-years validate-placeholders validate-playlists
+check: format sort-queue pre-commit test test-links validate-years validate-placeholders validate-playlists
 	@echo "✅ Checks Passed!"
 
 verify: check

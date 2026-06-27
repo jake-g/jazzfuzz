@@ -1,10 +1,10 @@
 __pycache__/
 old/
+scratch/
 .ipynb_checkpoints/
 
 .DS_Store
-*todo.tsv
-*auth*.json
+oauth.json
+browser.json
 index_sample.html
 venv/
-.venv/
