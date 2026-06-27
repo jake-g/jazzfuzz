@@ -1,5 +1,13 @@
 .PHONY: help server clean format match-albums test-links benchmark export-tsv test research-todos todo-wizard import-album sort-tsv validate-years check verify sort-todo
 
+# Detect OS for cross-platform in-place sed
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+	SED_INPLACE := sed -i ''
+else
+	SED_INPLACE := sed -i
+endif
+
 # Default target displays help
 help:
 	@echo "========================================================="
@@ -65,7 +73,19 @@ validate-years:
 sort-todo:
 	python3 maintenance.py sort-tsv --file albums_todo.tsv --by default
 
-check: format sort-todo test test-links validate-years
+validate-placeholders:
+	@echo "Checking for unresolved (Add ... manually) placeholders in index.html..."
+	@if grep -q "(Add " index.html; then \
+		echo "❌ Error: Found unresolved placeholder texts in index.html!"; \
+		grep -n "(Add " index.html; \
+		exit 1; \
+	fi
+	@echo "✅ No placeholders found."
+
+validate-playlists:
+	python3 maintenance.py validate-playlists --html index.html
+
+check: format sort-todo test test-links validate-years validate-placeholders validate-playlists
 	@echo "✅ ALL MAINTENANCE CHECKS PASSED SUCCESSFULLY!"
 
 verify: check
@@ -81,7 +101,7 @@ format:
 		echo "black is not installed. Skipping auto-formatting."; \
 	fi
 	@echo "Trimming trailing whitespace on HTML, JS, CSS, PY, TSV, MD..."
-	find . -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" -o -name "*.py" -o -name "*.tsv" -o -name "*.md" \) -not -path "*/old/*" -exec sed -i '' -e 's/[[:space:]]*$$//' {} +
+	find . -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" -o -name "*.py" -o -name "*.tsv" -o -name "*.md" \) -not -path "*/old/*" -exec $(SED_INPLACE) -e 's/[[:space:]]*$$//' {} +
 
 clean:
 	@echo "🧹 Cleaning up pycache files..."

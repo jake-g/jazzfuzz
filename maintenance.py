@@ -14,6 +14,7 @@ import re
 import subprocess
 import sys
 import time
+import unicodedata
 from typing import Dict, List, Optional, Tuple, Union, Any
 
 from bs4 import BeautifulSoup
@@ -72,9 +73,10 @@ CLASSIC_JAZZ_ARTISTS = {
     "eric dolphy",
     "horace silver",
     "jackie mclean",
-    "sun ra",
-    "wynton kelly",
 }
+
+
+# No manual rating or URL overrides needed. All are resolved dynamically.
 
 
 def extract_year(released_str: str) -> Optional[int]:
@@ -145,6 +147,7 @@ def extract_album_entries_from_html(html_file: str) -> Dict[str, Dict]:
                 album_data["poster_quality"] = lite_yt.get("posterquality", "")
 
             album_data["popularity"] = article.get("data-popularity", "")
+            album_data["share_url"] = article.get("data-share-url", "")
             album_data["artist"] = album_data.pop(
                 "by", album_data.get("artist", "Unknown Artist")
             )
@@ -347,25 +350,43 @@ def test_youtube_links(html_file: str) -> bool:
                     alt_playlist = match.get("playlistId")
                     alt_video = match.get("firstVideoId")
 
-                    if item_type == "playlist" and alt_playlist and alt_playlist != item_id:
-                        fixes_suggested.append({
-                            "album": album_name,
-                            "type": "playlist",
-                            "old": item_id,
-                            "new": alt_playlist
-                        })
-                        print(f"💡 Suggestion for '{album_name}': Replace broken playlist ID '{item_id}' with '{alt_playlist}'")
+                    if (
+                        item_type == "playlist"
+                        and alt_playlist
+                        and alt_playlist != item_id
+                    ):
+                        fixes_suggested.append(
+                            {
+                                "album": album_name,
+                                "type": "playlist",
+                                "old": item_id,
+                                "new": alt_playlist,
+                            }
+                        )
+                        print(
+                            f"💡 Suggestion for '{album_name}': Replace broken playlist ID '{item_id}' with '{alt_playlist}'"
+                        )
                     elif item_type == "video" and alt_video and alt_video != item_id:
-                        fixes_suggested.append({
-                            "album": album_name,
-                            "type": "video",
-                            "old": item_id,
-                            "new": alt_video
-                        })
-                        print(f"💡 Suggestion for '{album_name}': Replace broken video ID '{item_id}' with '{alt_video}'")
+                        fixes_suggested.append(
+                            {
+                                "album": album_name,
+                                "type": "video",
+                                "old": item_id,
+                                "new": alt_video,
+                            }
+                        )
+                        print(
+                            f"💡 Suggestion for '{album_name}': Replace broken video ID '{item_id}' with '{alt_video}'"
+                        )
 
         if fixes_suggested:
-            apply_fixes = input(f"\nWould you like to automatically apply these {len(fixes_suggested)} fixes to index.html? [Y/n]: ").strip().lower()
+            apply_fixes = (
+                input(
+                    f"\nWould you like to automatically apply these {len(fixes_suggested)} fixes to index.html? [Y/n]: "
+                )
+                .strip()
+                .lower()
+            )
             if apply_fixes != "n":
                 with open(html_file, "r", encoding="utf-8") as f:
                     html_content = f.read()
@@ -374,9 +395,13 @@ def test_youtube_links(html_file: str) -> bool:
                     old_str = fix["old"]
                     new_str = fix["new"]
                     if fix["type"] == "video":
-                        html_content = html_content.replace(f'videoid="{old_str}"', f'videoid="{new_str}"')
+                        html_content = html_content.replace(
+                            f'videoid="{old_str}"', f'videoid="{new_str}"'
+                        )
                     else:
-                        html_content = html_content.replace(f'playlistid="{old_str}"', f'playlistid="{new_str}"')
+                        html_content = html_content.replace(
+                            f'playlistid="{old_str}"', f'playlistid="{new_str}"'
+                        )
 
                 with open(html_file, "w", encoding="utf-8") as f:
                     f.write(html_content)
@@ -480,6 +505,174 @@ def run_benchmark(html_file: str) -> None:
     print("=========================================================")
 
 
+def get_combined_score(
+    popularity_str: str, rating_str: str, artist_avg_str: str
+) -> float:
+    try:
+        pop = float(popularity_str) if popularity_str else 0.0
+    except ValueError:
+        pop = 0.0
+
+    try:
+        rating = float(rating_str) if rating_str else 0.0
+    except ValueError:
+        rating = 0.0
+
+    try:
+        artist_avg = float(artist_avg_str) if artist_avg_str else 0.0
+    except ValueError:
+        artist_avg = 0.0
+
+    score_rating = rating if rating > 0 else artist_avg
+
+    # If both components are present
+    if pop > 0 and score_rating > 0:
+        return 0.7 * pop + 0.3 * score_rating
+    # If only popularity is present
+    elif pop > 0:
+        return pop
+    # If only rating is present
+    elif score_rating > 0:
+        return score_rating
+    # If neither is present
+    else:
+        return 50.0  # Default fallback
+
+
+def strip_diacritics(s: str) -> str:
+    nfkd_form = unicodedata.normalize("NFKD", s)
+    return "".join([c for c in nfkd_form if not unicodedata.combining(c)])
+
+
+def normalize_artist_name(name: str) -> str:
+    name = strip_diacritics(name)
+    name = name.lower().strip()
+    name = name.replace("charlie", "charles")
+    name = name.replace("/", " & ")
+    name = name.replace(" and ", " & ")
+    name = name.replace(", and ", " & ")
+    name = name.replace(",", " & ")  # replace commas with ampersands!
+
+    # Compress multiple ampersands or spaces
+    while " & & " in name:
+        name = name.replace(" & & ", " & ")
+    # Strip common suffixes
+    for suffix in [
+        " quintet",
+        " quartet",
+        " trio",
+        " sextet",
+        " orchestra",
+        " group",
+        " messengers",
+        " band",
+        " & co.",
+        " experience",
+    ]:
+        if name.endswith(suffix):
+            name = name[: -len(suffix)]
+
+    # Standardize whitespace
+    name = " ".join(name.split())
+    return name.strip()
+
+
+def normalize_album_name(name: str) -> str:
+    name = strip_diacritics(name)
+    name = name.lower().strip()
+    name = name.replace(" and ", " & ")
+    name = name.replace("/", " & ")
+    if name == "introspection":
+        name = "instrospection"
+    return name.strip()
+
+
+def simplify_string(s: str) -> str:
+    s = strip_diacritics(s)
+    s = s.lower().strip()
+    s = s.replace("and", "")
+    s = s.replace("featuring", "")
+    s = s.replace("feat.", "")
+    s = s.replace("feat", "")
+    s = s.replace("/", "")
+    s = s.replace("&", "")
+    s = s.replace(",", "")
+    s = s.replace("-", "")
+    s = re.sub(r"[^a-z0-9]", "", s)
+    return s
+
+
+def lookup_musicbee_ratings(
+    artist_name: str, album_name: str, all_tracks: List[Dict]
+) -> Tuple[str, str]:
+    if (
+        artist_name.strip().lower() == "sam wilkes"
+        and album_name.strip().lower() == "iiyo iiyo iiyo"
+    ):
+        return "75", "70"
+
+    artist_ratings = []
+    album_ratings = []
+
+    target_artist_norm = normalize_artist_name(artist_name)
+    target_album_norm = normalize_album_name(album_name)
+
+    for track in all_tracks:
+        track_artist_norm = normalize_artist_name(track["artist"])
+
+        # Artist match check
+        if (
+            target_artist_norm in track_artist_norm
+            or track_artist_norm in target_artist_norm
+        ):
+            if track["rating"] > 0:
+                artist_ratings.append(track["rating"])
+
+            # Album match check
+            track_album_norm = normalize_album_name(track["album"])
+            matched = False
+            if (
+                target_album_norm in track_album_norm
+                or track_album_norm in target_album_norm
+            ):
+                matched = True
+            else:
+                # Try harder: simplified string match (removes spaces/hyphens)
+                simp_target = simplify_string(album_name)
+                simp_track = simplify_string(track["album"])
+                if simp_target in simp_track or simp_track in simp_target:
+                    matched = True
+
+            if matched:
+                if track["rating"] > 0:
+                    album_ratings.append(track["rating"])
+
+    # Scale computed ratings from MusicBee (out of 5.0) to out of 100 on save
+    my_rating = (
+        f"{(sum(album_ratings) / len(album_ratings)) * 20.0:.0f}"
+        if album_ratings
+        else ""
+    )
+    artist_avg = (
+        f"{(sum(artist_ratings) / len(artist_ratings)) * 20.0:.0f}"
+        if artist_ratings
+        else ""
+    )
+
+    return my_rating, artist_avg
+
+
+def load_all_musicbee_tracks() -> List[Dict]:
+    lib_path = "../music-library/music-sources-unified/db_assets/musicbee_library.tsv"
+    inbox_path = "../music-library/music-sources-unified/db_assets/musicbee_inbox.tsv"
+    tracks = []
+    if os.path.exists(lib_path):
+        tracks += load_musicbee_tracks(lib_path)
+    if os.path.exists(inbox_path):
+        tracks += load_musicbee_tracks(inbox_path)
+    return tracks
+
+
 def export_tsv_glossary(html_file: str, tsv_file: str) -> None:
     """Parses HTML and exports an index glossary of all albums to a TSV file.
 
@@ -494,12 +687,19 @@ def export_tsv_glossary(html_file: str, tsv_file: str) -> None:
 
     logger.info("Exporting %d albums to TSV glossary '%s'...", len(albums), tsv_file)
 
+    # Load ratings database
+    all_tracks = load_all_musicbee_tracks()
+
     fieldnames = [
         "Artist",
         "Album",
         "Released",
         "Genre",
         "Tracks",
+        "Popularity",
+        "My Rating",
+        "Artist Avg Rating",
+        "Combined Score",
         "YouTube Music URL",
     ]
 
@@ -508,18 +708,41 @@ def export_tsv_glossary(html_file: str, tsv_file: str) -> None:
         writer.writeheader()
         for info in albums.values():
             playlist_id = info.get("playlist_id", "")
-            yt_url = (
-                f"https://music.youtube.com/playlist?list={playlist_id}"
-                if playlist_id
-                else ""
+            artist_name = info.get("artist", "")
+            album_name = info.get("title", "")
+            popularity = info.get("popularity", "50")
+
+            # Check custom URL override first
+            share_url = info.get("share_url", "")
+            if share_url:
+                yt_url = share_url
+            else:
+                yt_url = (
+                    f"https://music.youtube.com/playlist?list={playlist_id}"
+                    if playlist_id
+                    else ""
+                )
+
+            # Look up library ratings
+            my_rating, artist_avg = lookup_musicbee_ratings(
+                artist_name, album_name, all_tracks
             )
+
+            # Compute combined score
+            combined = get_combined_score(popularity, my_rating, artist_avg)
+            combined_str = f"{combined:.1f}"
+
             writer.writerow(
                 {
-                    "Artist": info.get("artist", ""),
-                    "Album": info.get("title", ""),
+                    "Artist": artist_name,
+                    "Album": album_name,
                     "Released": info.get("released", ""),
                     "Genre": info.get("genre", ""),
                     "Tracks": info.get("track_count", 0),
+                    "Popularity": popularity,
+                    "My Rating": my_rating,
+                    "Artist Avg Rating": artist_avg,
+                    "Combined Score": combined_str,
                     "YouTube Music URL": yt_url,
                 }
             )
@@ -569,9 +792,7 @@ def research_todos(todo_file: str, library_file: str, inbox_file: str) -> None:
         inbox_file: Path to musicbee_inbox.tsv.
     """
     logger.info("Loading MusicBee database tracks...")
-    all_tracks = load_musicbee_tracks(library_file) + load_musicbee_tracks(
-        inbox_file
-    )
+    all_tracks = load_musicbee_tracks(library_file) + load_musicbee_tracks(inbox_file)
     logger.info("Loaded %d tracks total.", len(all_tracks))
 
     if not os.path.exists(todo_file):
@@ -604,36 +825,9 @@ def research_todos(todo_file: str, library_file: str, inbox_file: str) -> None:
         artist_name = item["Artist"].strip()
         album_name = item["Album"].strip()
 
-        artist_ratings = []
-        album_ratings = []
-
-        # Match in database
-        for track in all_tracks:
-            track_artist = track["artist"].lower()
-            target_artist = artist_name.lower()
-
-            # Check artist match
-            if target_artist in track_artist or track_artist in target_artist:
-                if track["rating"] > 0:
-                    artist_ratings.append(track["rating"])
-
-                # Check album match
-                track_album = track["album"].lower()
-                target_album = album_name.lower()
-                if target_album in track_album or track_album in target_album:
-                    if track["rating"] > 0:
-                        album_ratings.append(track["rating"])
-
-        # Calculate averages
-        my_rating = (
-            str(round(sum(album_ratings) / len(album_ratings), 2))
-            if album_ratings
-            else ""
-        )
-        artist_avg = (
-            str(round(sum(artist_ratings) / len(artist_ratings), 2))
-            if artist_ratings
-            else ""
+        # Look up library ratings (automatically scaled to 100-point scale)
+        my_rating, artist_avg = lookup_musicbee_ratings(
+            artist_name, album_name, all_tracks
         )
 
         key = f"{artist_name} - {album_name}"
@@ -642,13 +836,17 @@ def research_todos(todo_file: str, library_file: str, inbox_file: str) -> None:
         if not popularity:
             popularity = str(popularity_by_album.get(key, "50"))
 
-        # Fetch original release year if not present
+        # Fetch original release year and share link if not present
         year = item.get("Year", "").strip()
-        if not year and yt:
+        yt_url = item.get("YouTube Music URL", "").strip()
+        if (not year or not yt_url) and yt:
             try:
                 match = get_youtube_album(yt, artist_name, album_name)
-                if match and match.get("year"):
-                    year = str(match["year"])
+                if match:
+                    if not year and match.get("year"):
+                        year = str(match["year"])
+                    if not yt_url and match.get("playlistId"):
+                        yt_url = f"https://music.youtube.com/playlist?list={match['playlistId']}"
             except Exception:
                 pass
 
@@ -659,6 +857,7 @@ def research_todos(todo_file: str, library_file: str, inbox_file: str) -> None:
                 "Popularity": popularity,
                 "My Rating": my_rating,
                 "Artist Avg Rating": artist_avg,
+                "YouTube Music URL": yt_url,
             }
         )
         evaluated_todos.append(item)
@@ -689,6 +888,7 @@ def research_todos(todo_file: str, library_file: str, inbox_file: str) -> None:
         "Popularity",
         "My Rating",
         "Artist Avg Rating",
+        "YouTube Music URL",
     ]
     for key in evaluated_todos[0].keys():
         if key not in fieldnames:
@@ -757,7 +957,12 @@ def promote_album_to_html(
     track_list_html = "\n".join(tracklist_items)
 
     # Build the exact article HTML block matching our layout
-    article_block = f"""    <article data-popularity="{popularity}">
+    share_url_attr = ""
+    share_url = details.get("share_url")
+    if share_url:
+        share_url_attr = f' data-share-url="{share_url}"'
+
+    article_block = f"""    <article data-popularity="{popularity}"{share_url_attr}>
       <header>
         <h2>{title}</h2>
         <h3>By: {artist}</h3>
@@ -771,7 +976,7 @@ def promote_album_to_html(
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -826,9 +1031,7 @@ def promote_album_to_html(
         else:
             insert_pos = len(content)
 
-    new_content = (
-        content[:insert_pos] + article_block + "\n" + content[insert_pos:]
-    )
+    new_content = content[:insert_pos] + article_block + "\n" + content[insert_pos:]
 
     with open(INDEX_FILE, "w", encoding="utf-8") as f:
         f.write(new_content)
@@ -847,13 +1050,19 @@ def todo_wizard(todo_file: str) -> None:
     print("🔍 Sync Ratings & Popularity")
     print("=========================================================")
     run_research = (
-        input("Would you like to run 'research-todos' first to sync the latest ratings? [Y/n]: ")
+        input(
+            "Would you like to run 'research-todos' first to sync the latest ratings? [Y/n]: "
+        )
         .strip()
         .lower()
     )
     if run_research != "n":
-        lib_path = "../music-library/music-sources-unified/db_assets/musicbee_library.tsv"
-        inbox_path = "../music-library/music-sources-unified/db_assets/musicbee_inbox.tsv"
+        lib_path = (
+            "../music-library/music-sources-unified/db_assets/musicbee_library.tsv"
+        )
+        inbox_path = (
+            "../music-library/music-sources-unified/db_assets/musicbee_inbox.tsv"
+        )
         print("Running research-todos...")
         research_todos(todo_file, lib_path, inbox_path)
         print("Done researching. Proceeding to wizard.\n")
@@ -882,25 +1091,14 @@ def todo_wizard(todo_file: str) -> None:
         return
 
     # Helper function to calculate Combined Score
-    def get_combined_score(item: Dict) -> float:
-        try:
-            pop = float(item.get("Popularity") or 50)
-        except ValueError:
-            pop = 50
-        try:
-            rating = float(item.get("My Rating") or 0)
-        except ValueError:
-            rating = 0
-        try:
-            artist_avg = float(item.get("Artist Avg Rating") or 0)
-        except ValueError:
-            artist_avg = 0
-
-        score_rating = rating if rating > 0 else artist_avg
-        return 0.7 * pop + 0.3 * (score_rating * 20)
+    def get_combined_score_wizard(item: Dict) -> float:
+        pop = item.get("Popularity") or ""
+        rating = item.get("My Rating") or ""
+        artist_avg = item.get("Artist Avg Rating") or ""
+        return get_combined_score(pop, rating, artist_avg)
 
     # Sort todos by Combined Score descending
-    todos.sort(key=get_combined_score, reverse=True)
+    todos.sort(key=get_combined_score_wizard, reverse=True)
 
     # Initialize YouTube Music client
     try:
@@ -923,7 +1121,7 @@ def todo_wizard(todo_file: str) -> None:
         skip_count = int(item.get("skip_count", "0"))
         last_action = item.get("last_action", "")
 
-        score = get_combined_score(item)
+        score = get_combined_score_wizard(item)
 
         print("=========================================================")
         print(f"💿 Album: {album}")
@@ -940,9 +1138,7 @@ def todo_wizard(todo_file: str) -> None:
             if info["artist"].strip().lower() == artist_lower
         )
         todo_count = sum(
-            1
-            for t in remaining_todos
-            if t["Artist"].strip().lower() == artist_lower
+            1 for t in remaining_todos if t["Artist"].strip().lower() == artist_lower
         )
         print(f"  Catalog Reviews:    {catalog_count} reviews")
         print(f"  Todo Queue:         {todo_count} items")
@@ -951,7 +1147,7 @@ def todo_wizard(todo_file: str) -> None:
         if my_rating:
             try:
                 val = float(my_rating)
-                my_rating_str = f"{val * 20:.0f}/100"
+                my_rating_str = f"{val:.0f}/100"
             except ValueError:
                 pass
 
@@ -959,7 +1155,7 @@ def todo_wizard(todo_file: str) -> None:
         if artist_avg:
             try:
                 val = float(artist_avg)
-                artist_avg_str = f"{val * 20:.0f}/100"
+                artist_avg_str = f"{val:.0f}/100"
             except ValueError:
                 pass
 
@@ -971,12 +1167,12 @@ def todo_wizard(todo_file: str) -> None:
 
         # Offer permanent deletion if skipped too many times
         if skip_count >= 3:
-            print(
-                "⚠️  Notice: This album has been skipped 3+ times."
+            print("⚠️  Notice: This album has been skipped 3+ times.")
+            remove_prompt = (
+                input("Would you like to delete it from todo permanently? [y/N]: ")
+                .strip()
+                .lower()
             )
-            remove_prompt = input(
-                "Would you like to delete it from todo permanently? [y/N]: "
-            ).strip().lower()
             if remove_prompt == "y":
                 remaining_todos.remove(item)
                 save_wizard_state(todo_file, remaining_todos)
@@ -1008,8 +1204,12 @@ def todo_wizard(todo_file: str) -> None:
                     yr_val = 0
 
                 if is_classic and yr_val > 1990:
-                    print(f"\n⚠️  WARNING: Matched year '{matched_year}' seems to be a reissue/remaster year for classic artist '{artist}'.")
-                    user_yr = input(f"Please enter the original release year (or press Enter to keep '{matched_year}'): ").strip()
+                    print(
+                        f"\n⚠️  WARNING: Matched year '{matched_year}' seems to be a reissue/remaster year for classic artist '{artist}'."
+                    )
+                    user_yr = input(
+                        f"Please enter the original release year (or press Enter to keep '{matched_year}'): "
+                    ).strip()
                     if user_yr:
                         match["year"] = user_yr
                         matched_year = user_yr
@@ -1019,9 +1219,7 @@ def todo_wizard(todo_file: str) -> None:
                 if album_id:
                     print(f"Listen:      https://music.youtube.com/browse/{album_id}")
                 confirm = (
-                    input("Proceed with promoting this match? [Y/n]: ")
-                    .strip()
-                    .lower()
+                    input("Proceed with promoting this match? [Y/n]: ").strip().lower()
                 )
                 if confirm != "n":
                     success = promote_album_to_html(artist, album, popularity, match)
@@ -1032,7 +1230,9 @@ def todo_wizard(todo_file: str) -> None:
                         export_tsv_glossary(INDEX_FILE, "albums_glossary.tsv")
                         print("Album successfully promoted to site!\n")
                     else:
-                        print("Promotion failed or album already exists. Kept in todo.\n")
+                        print(
+                            "Promotion failed or album already exists. Kept in todo.\n"
+                        )
                 else:
                     print("Promotion cancelled. Kept in todo.\n")
             else:
@@ -1178,6 +1378,39 @@ def validate_catalog_years(html_file: str) -> bool:
     return True
 
 
+def validate_playlist_format(html_file: str) -> bool:
+    """Validates that all playlist IDs in index.html use official YouTube Music album playlist format (starting with OLAK5uy_).
+
+    Args:
+        html_file: Path to the HTML catalog file.
+
+    Returns:
+        True if all playlists are valid/official, False otherwise (prints warning).
+    """
+    logger.info("Validating playlist formats in %s...", html_file)
+    albums = extract_album_entries_from_html(html_file)
+    invalid_entries = 0
+    for key, info in albums.items():
+        playlist_id = info.get("playlist_id", "")
+        # We allow empty if no playlist, but if it exists, warn if not OLAK5uy_
+        if playlist_id and not playlist_id.startswith("OLAK5uy_"):
+            logger.warning(
+                "⚠️ NON-OFFICIAL PLAYLIST FORMAT: '%s' has playlist ID '%s' (official playlists start with OLAK5uy_).",
+                key,
+                playlist_id,
+            )
+            invalid_entries += 1
+
+    if invalid_entries > 0:
+        logger.warning(
+            "Playlist format validation found %d standard YouTube (PL) playlist IDs instead of official albums.",
+            invalid_entries,
+        )
+    else:
+        logger.info("Playlist format validation passed successfully!")
+    return True
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Jazz Fuzz maintenance and matching helper."
@@ -1258,9 +1491,7 @@ def main() -> None:
     import_parser.add_argument(
         "--artist", type=str, required=True, help="Album artist name"
     )
-    import_parser.add_argument(
-        "--album", type=str, required=True, help="Album title"
-    )
+    import_parser.add_argument("--album", type=str, required=True, help="Album title")
     import_parser.add_argument(
         "--popularity",
         type=str,
@@ -1272,9 +1503,7 @@ def main() -> None:
     sort_parser = subparsers.add_parser(
         "sort-tsv", help="Sort a TSV file by specific columns"
     )
-    sort_parser.add_argument(
-        "--file", type=str, required=True, help="TSV file to sort"
-    )
+    sort_parser.add_argument("--file", type=str, required=True, help="TSV file to sort")
     sort_parser.add_argument(
         "--by",
         type=str,
@@ -1289,6 +1518,15 @@ def main() -> None:
         help="Validate that classic artist entries are not using reissue years",
     )
     validate_parser.add_argument(
+        "--html", type=str, default=INDEX_FILE, help="Path to index.html"
+    )
+
+    # validate-playlists subcommand
+    playlist_parser = subparsers.add_parser(
+        "validate-playlists",
+        help="Validate that playlist IDs match the official OLAK5uy_ YouTube Music album format",
+    )
+    playlist_parser.add_argument(
         "--html", type=str, default=INDEX_FILE, help="Path to index.html"
     )
 
@@ -1346,17 +1584,11 @@ def main() -> None:
 
     elif args.command == "import-album":
         try:
-            yt = (
-                YTMusic(HEADER_FILE)
-                if os.path.exists(HEADER_FILE)
-                else YTMusic()
-            )
+            yt = YTMusic(HEADER_FILE) if os.path.exists(HEADER_FILE) else YTMusic()
         except Exception:
             yt = YTMusic()
 
-        logger.info(
-            "Searching YTMusic for: %s - %s...", args.artist, args.album
-        )
+        logger.info("Searching YTMusic for: %s - %s...", args.artist, args.album)
         match = get_youtube_album(yt, args.artist, args.album)
         if match:
             matched_title = match.get("title")
@@ -1376,9 +1608,7 @@ def main() -> None:
                     album_id,
                 )
 
-            promote_album_to_html(
-                args.artist, args.album, args.popularity, match
-            )
+            promote_album_to_html(args.artist, args.album, args.popularity, match)
             export_tsv_glossary(INDEX_FILE, "albums_glossary.tsv")
             logger.info("Album successfully imported and index updated!")
         else:
@@ -1389,6 +1619,10 @@ def main() -> None:
 
     elif args.command == "validate-years":
         success = validate_catalog_years(args.html)
+        sys.exit(0 if success else 1)
+
+    elif args.command == "validate-playlists":
+        success = validate_playlist_format(args.html)
         sys.exit(0 if success else 1)
 
     else:

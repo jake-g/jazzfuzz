@@ -22,7 +22,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install beautifulsoup4 fuzzywuzzy python-Levenshtein ytmusicapi black requests
+        pip install -r requirements.txt
 
     - name: Check python style formatting
       run: |
@@ -39,3 +39,11 @@ jobs:
     - name: Verify YouTube links are active
       run: |
         python maintenance.py test-links
+
+    - name: Validate release years
+      run: |
+        python maintenance.py validate-years
+
+    - name: Validate playlist formats
+      run: |
+        python maintenance.py validate-playlists

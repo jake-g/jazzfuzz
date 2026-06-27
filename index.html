@@ -3,6 +3,7 @@
 <html>
 
 <head>
+  <meta charset="UTF-8">
   <meta name="description"
     content="Discover my favorite jazz albums on Jazz Fuzz, a blog featuring information
     about the album, production,  recording details, and musicians involved. Albums include
@@ -11,7 +12,7 @@
 
   <title>Jazz Fuzz</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <script type="module" src="https://cdn.jsdelivr.net/npm/@justinribeiro/lite-youtube@1.5.0/lite-youtube.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -29,20 +30,36 @@
 
 <body>
   <header>
-    <h1>Jazz Fuzz</h1>
-    <P>A sonic portal to an ethereal realm of cosmic jazz expression, where time-honored masterpieces
-      resonate in their most primal and authentic essence, embracing the very soul of the genre and transcending
-      the boundaries of time and space</P>
-    <nav>
-      <div class="menu-container">
-        <button class="menu-btn" id="sort-menu-btn">Sort v</button>
-        <button class="menu-btn" id="filter-menu-btn">Filter v</button>
-        <button id="collapse-main">Collapse</button>
-      </div>
+    <div class="header-left">
+      <h1><a href="index.html" style="color: inherit; text-decoration: none;">Jazz Fuzz</a></h1>
       <div class="menu-links">
-        <a href="glossary.html">Glossary</a> |
-        <a href="todo.html">Todo Queue</a> |
+        <a href="#" id="scroll-top-link">Top</a> |
+        <a href="list.html?view=glossary">Glossary</a> |
+        <a href="list.html?view=queue">Queue</a> |
         <a href="https://github.com/jake-g/jazzfuzz" target="_blank">GitHub</a>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="menu-container">
+        <div class="player-controls-group">
+          <button class="menu-btn player-control-btn" id="prev-btn" title="Previous Album" disabled>|&lt;</button>
+          <button class="menu-btn player-control-btn" id="play-pause-btn" title="Play / Pause">&gt;</button>
+          <button class="menu-btn player-control-btn" id="next-btn" title="Next Album" disabled>&gt;|</button>
+          <button class="menu-btn player-control-btn" id="shuffle-btn" title="Toggle Shuffle Mode (Plays Random)">~</button>
+        </div>
+        <span class="player-separator">|</span>
+        <div class="nav-buttons-group">
+          <button class="menu-btn" id="sort-menu-btn">Sort v</button>
+          <button class="menu-btn" id="filter-menu-btn">Filter v</button>
+          <button class="menu-btn" id="albums-menu-btn">Albums v</button>
+          <button class="menu-btn inverted" id="collapse-main">Expand</button>
+        </div>
+      </div>
+
+      <!-- Inline Panel for Albums List (Table of Contents) -->
+      <div class="control-panel" id="albums-panel" style="display: none;">
+        <span class="panel-title">Jump to Album:</span>
+        <div id="albums-toc-list" class="toc-list"></div>
       </div>
 
       <!-- Inline Panel for Sort Options -->
@@ -74,8 +91,12 @@
           <span id="artist-filters" class="inline-filters"></span>
         </div>
       </div>
-    </nav>
+    </div>
   </header>
+
+  <div id="intro">
+    <p>A sonic portal to an ethereal realm of cosmic jazz expression, where time-honored masterpieces resonate in their most primal and authentic essence, embracing the very soul of the genre and transcending the boundaries of time and space</p>
+  </div>
 
   <section id="posts">
     <article data-popularity="83">
@@ -92,15 +113,22 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Nala Sinephro - pedal harp, synthesizers</li>
+          <li>James Mollison - tenor saxophone</li>
+          <li>Morgan Simpson - drums</li>
+          <li>Nubya Garcia - tenor saxophone</li>
+          <li>Shirley Tetteh - guitar</li>
+          <li>Lyle Barton - synthesizers</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Nala Sinephro</li>
+          <li>Mixed by Marta Salogni</li>
+          <li>Mastered by Heba Kadry</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -115,10 +143,11 @@
           <li>Continuum 9 (3:21)</li>
           <li>Continuum 10 (6:54)</li>
         </ol>
+        <p>Endlessness is a deeply meditative and expansive album that weaves together ambient jazz, modular synthesis, and orchestral arrangements. Sinephro showcases a masterful touch in creating lush, flowing soundscapes that feel both intimate and celestial.</p>
       </main>
     </article>
 
-<article data-popularity="50">
+<article data-popularity="74" data-share-url="https://music.youtube.com/playlist?list=OLAK5uy_kuz2dSMx6eYTjmTIqROz_2280mS7FZ4Ds&amp;si=UJ1xrcukNinoCwyL">
       <header>
         <h2>Mid Spiral</h2>
         <h3>By: BADBADNOTGOOD</h3>
@@ -127,20 +156,24 @@
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&amp;modestbranding=1&amp;enablejsapi=1&amp;autoplay=0"
-          videoid="lsotrkOwiTI"
+          videoid="dDrizGgvP7o"
           playlistid="OLAK5uy_kuz2dSMx6eYTjmTIqROz_2280mS7FZ4Ds"
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Chester Hansen - bass, keyboards</li>
+          <li>Leland Whitty - saxophones, flute, guitar</li>
+          <li>Alexander Sowinski - drums</li>
+          <li>Kassa Overall - percussion</li>
+          <li>Felix East - keyboards</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by BADBADNOTGOOD</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -163,10 +196,11 @@
           <li>White Light (3:24)</li>
           <li>Best Left Unsolved (Bonus Track) (5:27)</li>
         </ol>
+        <p>Mid Spiral presents a vibrant, groove-heavy collection of instrumental fusion tracks from the acclaimed Canadian trio. Blending psych-jazz, funk, and modern improvisation, the album captures the band's signature collaborative energy.</p>
       </main>
     </article>
 
-<article data-popularity="78">
+<article data-popularity="78" data-share-url="https://music.youtube.com/playlist?list=OLAK5uy_mNts0v1gSna3Q0Z0Sz-PJRHU0k2RU4UIg&amp;si=vlL6Z156ZzYbqT06">
       <header>
         <h2>iiyo iiyo iiyo</h2>
         <h3>By: Sam Wilkes</h3>
@@ -175,20 +209,23 @@
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&amp;modestbranding=1&amp;enablejsapi=1&amp;autoplay=0"
-          videoid="-9ToAf1R6ig"
+          videoid="hQIRiDlvq_I"
           playlistid="OLAK5uy_mNts0v1gSna3Q0Z0Sz-PJRHU0k2RU4UIg"
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Sam Wilkes - bass, synthesizers</li>
+          <li>Dylan Ryan - drums</li>
+          <li>Christian Euman - drums</li>
+          <li>Jacob Mann - keyboards</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Sam Wilkes</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -198,10 +235,11 @@
           <li>Rain & Snow (10:39)</li>
           <li>Descending (WWW) (8:15)</li>
         </ol>
+        <p>iiyo iiyo iiyo is a serene, atmospheric ambient jazz album featuring Wilkes's warm, signature basslines and melodic synthesizer textures. The record provides a calming and immersive listening experience.</p>
       </main>
     </article>
 
-<article data-popularity="50">
+<article data-popularity="88">
       <header>
         <h2>Promises</h2>
         <h3>By: Floating Points, Pharoah Sanders & The London Symphony Orchestra</h3>
@@ -215,15 +253,19 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Sam Shepherd - piano, synthesizers, harpsichord</li>
+          <li>Pharoah Sanders - tenor saxophone</li>
+          <li>London Symphony Orchestra - strings</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Sam Shepherd</li>
+          <li>Recorded by Jeremy Murphy</li>
+          <li>Mixed by Sam Shepherd and Marta Salogni</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -237,6 +279,7 @@
           <li>Movement 8 (7:23)</li>
           <li>Movement 9 (2:31)</li>
         </ol>
+        <p>Promises is a breathtaking, single-movement collaboration between electronic producer Floating Points and legendary saxophonist Pharoah Sanders. Backed by the London Symphony Orchestra, it is a hauntingly beautiful masterpiece of modern spiritual jazz.</p>
       </main>
     </article>
 
@@ -254,15 +297,20 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Nala Sinephro - pedal harp, modular synthesizer</li>
+          <li>Shirley Tetteh - guitar</li>
+          <li>Eddie Hick - drums</li>
+          <li>Dwayne Kilvington - synthesizers</li>
+          <li>Nubya Garcia - tenor saxophone</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Nala Sinephro</li>
+          <li>Mixed by Marta Salogni</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -275,10 +323,11 @@
           <li>Space 7 (1:42)</li>
           <li>Space 8 (17:32)</li>
         </ol>
+        <p>Space 1.8 is Sinephro's brilliant debut album, celebrated for its therapeutic ambient jazz textures and intricate harp performances. It established her as a major force in the contemporary London jazz scene.</p>
       </main>
     </article>
 
-<article data-popularity="50">
+<article data-popularity="75" data-share-url="https://music.youtube.com/playlist?list=OLAK5uy_muqGYZXK7x3nGykw8txYzjRKsshxwCcHc&amp;si=pY71OTsQL4t_a86D">
       <header>
         <h2>KOKOROKO</h2>
         <h3>By: KOKOROKO</h3>
@@ -287,20 +336,26 @@
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&amp;modestbranding=1&amp;enablejsapi=1&amp;autoplay=0"
-          videoid="a0Goiw94xhg"
+          videoid="i4jsRiNqCW4"
           playlistid="OLAK5uy_muqGYZXK7x3nGykw8txYzjRKsshxwCcHc"
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Sheila Maurice-Grey - trumpet</li>
+          <li>Anerae Shabazz - tenor saxophone</li>
+          <li>Richie Garrison - tenor saxophone</li>
+          <li>Oscar Jerome - guitar</li>
+          <li>Yohan Kebede - keyboards</li>
+          <li>Mutale Chashi - bass</li>
+          <li>Onome Edgeworth - percussion</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by KOKOROKO</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -309,6 +364,7 @@
           <li>Uman (5:13)</li>
           <li>Abusey Junction (7:05)</li>
         </ol>
+        <p>This self-titled EP showcases KOKOROKO's vibrant fusion of West African Afrobeat and London jazz. Driven by a powerful horn section, the music is soulful, energetic, and highly rhythmic.</p>
       </main>
     </article>
 
@@ -326,7 +382,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -372,7 +428,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -438,7 +494,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -481,7 +537,7 @@
       </main>
     </article>
 
-<article data-popularity="50">
+<article data-popularity="91">
       <header>
         <h2>Scenery</h2>
         <h3>By: Ryo Fukui</h3>
@@ -495,15 +551,18 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Ryo Fukui - piano</li>
+          <li>Satoshi Denpo - bass</li>
+          <li>Yoshinori Fukui - drums</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Masataka Ito</li>
+          <li>Recorded by Kunio Arai</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -514,10 +573,11 @@
           <li>Autumn Leaves (6:32)</li>
           <li>Scenery (5:32)</li>
         </ol>
+        <p>Scenery is a highly acclaimed Japanese jazz trio masterpiece featuring Fukui's lyrical, modal piano playing. It has achieved legendary status worldwide for its beautiful, hard-driving bop style.</p>
       </main>
     </article>
 
-<article data-popularity="50">
+<article data-popularity="84">
       <header>
         <h2>IV</h2>
         <h3>By: BADBADNOTGOOD</h3>
@@ -526,20 +586,25 @@
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&amp;modestbranding=1&amp;enablejsapi=1&amp;autoplay=0"
-          videoid="CXX-1gNz1ko"
+          videoid="lHSe1nVAB6s"
           playlistid="OLAK5uy_lXEUT6jxlF7d7_cNI88DpsY476qcd7iL4"
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Chester Hansen - bass</li>
+          <li>Leland Whitty - saxophones, flute</li>
+          <li>Alexander Sowinski - drums</li>
+          <li>Matthew Tavares - keyboards</li>
+          <li>Colin Stetson - tenor saxophone</li>
+          <li>Kaytranada - synthesizer</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by BADBADNOTGOOD</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -555,10 +620,11 @@
           <li>In Your Eyes (feat. Charlotte Day Wilson) (4:08)</li>
           <li>Cashmere (4:47)</li>
         </ol>
+        <p>IV is a sprawling, collaborative jazz fusion album featuring guest spots from Colin Stetson, Kaytranada, and Charlotte Day Wilson. It represents a peak of the band's genre-blending studio exploration.</p>
       </main>
     </article>
 
-<article data-popularity="92">
+<article data-popularity="92" data-share-url="https://music.youtube.com/playlist?list=OLAK5uy_nCjfBAMdl6EIZ9NYPPrHKFKlEnzxl6F7o&amp;si=_TGls9tL3f0ZIOn6">
       <header>
         <h2>The Epic</h2>
         <h3>By: Kamasi Washington</h3>
@@ -567,20 +633,28 @@
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&amp;modestbranding=1&amp;enablejsapi=1&amp;autoplay=0"
-          videoid="NtQRBzSN9Vw"
+          videoid="uz2nxBio2gg"
           playlistid="OLAK5uy_nCjfBAMdl6EIZ9NYPPrHKFKlEnzxl6F7o"
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Kamasi Washington - tenor saxophone</li>
+          <li>Ryan Porter - trombone</li>
+          <li>Igmar Thomas - trumpet</li>
+          <li>Cameron Graves - piano</li>
+          <li>Brandon Coleman - keyboards</li>
+          <li>Miles Mosley - double bass</li>
+          <li>Ronald Bruner Jr. - drums</li>
+          <li>Tony Austin - drums</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Kamasi Washington</li>
+          <li>Mastered by Daddy Kev</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -602,10 +676,11 @@
           <li>Malcolm’s Theme (8:41)</li>
           <li>The Message (11:09)</li>
         </ol>
+        <p>The Epic is a massive, triple-disc spiritual jazz masterpiece that brought Washington to global prominence. Combining big band arrangements, choirs, and driving post-bop energy, it revitalized modern jazz.</p>
       </main>
     </article>
 
-<article data-popularity="50">
+<article data-popularity="80">
       <header>
         <h2>III</h2>
         <h3>By: BADBADNOTGOOD</h3>
@@ -619,15 +694,18 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Chester Hansen - bass</li>
+          <li>Matthew Tavares - keyboards</li>
+          <li>Alexander Sowinski - drums</li>
+          <li>Leland Whitty - saxophone</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by BADBADNOTGOOD</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -641,6 +719,7 @@
           <li>Since You Asked Kindly (4:42)</li>
           <li>Cs60 (6:53)</li>
         </ol>
+        <p>III is the breakout album that solidified BADBADNOTGOOD's reputation as jazz-hip-hop crossover pioneers. It features intense, raw instrumental chemistry and complex compositions.</p>
       </main>
     </article>
 
@@ -653,12 +732,12 @@
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&modestbranding=1&enablejsapi=1&autoplay=0"
-          videoid="R0_pkbpj4Z8"
-          playlistid="PLx40eZuUyukWAF4qsyFkdx2ZseSfvYh0K"
+          videoid="zFb6KukP7h0"
+          playlistid="OLAK5uy_k6HkmnZXINNHCIRhqPIq0L1Ls77zohxtE"
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -698,7 +777,7 @@
       </main>
     </article>
 
-<article data-popularity="50">
+<article data-popularity="88">
       <header>
         <h2>All Of Me</h2>
         <h3>By: Masayoshi Takanaka</h3>
@@ -712,15 +791,19 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Masayoshi Takanaka - guitar</li>
+          <li>Yukihiro Takahashi - drums</li>
+          <li>Motohiko Hino - drums</li>
+          <li>Tsuyoshi Kon - guitar</li>
+          <li>Ryuichi Sakamoto - keyboards</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Masayoshi Takanaka</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -739,6 +822,7 @@
           <li>Malibu (6:13)</li>
           <li>Ready To Fly (6:56)</li>
         </ol>
+        <p>All Of Me is a vibrant, sun-drenched collection of Japanese city pop and jazz-fusion instrumentals. Takanaka's joyful guitar work and breezy arrangements make it a summer classic.</p>
       </main>
     </article>
 
@@ -756,15 +840,16 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Keith Jarrett - piano</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Manfred Eicher</li>
+          <li>Recorded by Okihiro Sugano at various venues in Japan</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -782,6 +867,7 @@
           <li>Encore from Tokyo (8:17)</li>
           <li>Encore from Nagoya (4:03)</li>
         </ol>
+        <p>Sun Bear Concerts captures Jarrett at the peak of his legendary solo piano improvisations across five venues in Japan. It is a monumental achievement in solo performance history.</p>
       </main>
     </article>
 
@@ -799,15 +885,22 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Sun Ra - keyboards</li>
+          <li>Marshall Allen - alto saxophone</li>
+          <li>John Gilmore - tenor saxophone</li>
+          <li>Elo Omoe - bass clarinet</li>
+          <li>Michael Ray - trumpet</li>
+          <li>Danny Thompson - baritone saxophone</li>
+          <li>Richard Williams - bass</li>
+          <li>Luqman Ali - drums</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Sun Ra and Tom Wilson</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -822,6 +915,7 @@
           <li>Twin Stars of Thence (Alternate Mix) (9:52)</li>
           <li>There Are Other Worlds (They Have Not Told You Of) (Alternate Mix) (10:56)</li>
         </ol>
+        <p>Lanquidity is a unique, groove-heavy entry in Sun Ra's vast discography, blending his cosmic space jazz with electronic keyboards and funk rhythms. It remains one of his most accessible and acclaimed works.</p>
       </main>
     </article>
 
@@ -839,7 +933,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -877,6 +971,54 @@
       </main>
     </article>
 
+    <article data-popularity="50">
+      <header>
+        <h2>Concierto</h2>
+        <h3>By: Jim Hall</h3>
+        <h3>Released: 1975</h3>
+        <h3>Genre: Jazz</h3>
+      </header>
+      <div class="playerContainer">
+        <lite-youtube params="rel=0&amp;modestbranding=1&amp;enablejsapi=1&amp;autoplay=0"
+          videoid="Zfa92vR7FRA"
+          playlistid="OLAK5uy_ke86cH6GTFjjPs1CSwhRZb0_TYJeej9e0"
+          posterquality="maxresdefault"
+        ></lite-youtube>
+      </div>
+      <button class="toggle-details-btn">Expand</button>
+      <main>
+        <h3>Musicians:</h3>
+        <ul>
+          <li>Jim Hall – guitar</li>
+          <li>Paul Desmond – alto saxophone</li>
+          <li>Chet Baker – trumpet</li>
+          <li>Roland Hanna – piano</li>
+          <li>Ron Carter – double bass</li>
+          <li>Steve Gadd – drums</li>
+          <li>Don Sebesky – arranger</li>
+        </ul>
+        <h3>Production Credits:</h3>
+        <ul>
+          <li>Produced by Creed Taylor</li>
+          <li>Recorded on April 16 and 23, 1975 at Van Gelder Studio, Englewood Cliffs, New Jersey</li>
+          <li>Engineered by Rudy Van Gelder</li>
+        </ul>
+        <h3>Track List:</h3>
+        <ol>
+          <li>You'd Be So Nice To Come Home To (7:06)</li>
+          <li>Two's Blues (3:50)</li>
+          <li>The Answer Is Yes (7:39)</li>
+          <li>Concierto De Aranjuez (19:21)</li>
+          <li>Rock Skippin' (6:11)</li>
+          <li>Unfinished Business (2:37)</li>
+          <li>You'd Be So Nice To Come Home To (alt. take) (7:28)</li>
+          <li>The Answer Is Yes (alt. take) (5:35)</li>
+          <li>Rock Skippin' (alt. take) (6:04)</li>
+        </ol>
+        <p>Concierto is a smooth, sophisticated cool jazz masterpiece led by guitarist Jim Hall. Featuring a stellar lineup of Chet Baker, Paul Desmond, Ron Carter, Steve Gadd, and Roland Hanna, the album is best known for its legendary 19-minute jazz adaptation of Joaquín Rodrigo's classical guitar concerto, "Concierto de Aranjuez", featuring unforgettable melancholic solos by Baker and Desmond.</p>
+      </main>
+    </article>
+
 <article data-popularity="84">
       <header>
         <h2>Brown Rice</h2>
@@ -891,15 +1033,19 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Don Cherry - trumpet</li>
+          <li>Billy Higgins - drums</li>
+          <li>Charlie Haden - bass</li>
+          <li>Frank Lowe - tenor saxophone</li>
+          <li>Ricky Cherry - electric piano</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Corrado Bacchelli</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -908,6 +1054,7 @@
           <li>Chenrezig (12:49)</li>
           <li>Degi-Degi (7:07)</li>
         </ol>
+        <p>Brown Rice is a pioneering world-fusion album, blending Cherry's pocket trumpet with chanting, African percussion, and avant-garde jazz textures. It is deeply spiritual and mesmerizing.</p>
       </main>
     </article>
 
@@ -925,15 +1072,19 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Herbie Hancock - Fender Rhodes, Clavinet, synthesizers</li>
+          <li>Bennie Maupin - soprano/tenor saxophone, bass clarinet, flute</li>
+          <li>Paul Jackson - bass guitar</li>
+          <li>Mike Clark - drums</li>
+          <li>Bill Summers - percussion</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by David Rubinson and Herbie Hancock</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -942,6 +1093,7 @@
           <li>Butterfly (11:18)</li>
           <li>Spank-A-Lee (7:12)</li>
         </ol>
+        <p>Thrust is the highly acclaimed jazz-funk follow-up to Head Hunters, featuring the legendary 'Spank-a-Lee' groove and complex keyboard improvisations. It is a cornerstone of the 1970s fusion movement.</p>
       </main>
     </article>
 
@@ -959,7 +1111,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1030,7 +1182,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1073,7 +1225,7 @@
       </main>
     </article>
 
-<article data-popularity="50">
+<article data-popularity="70">
       <header>
         <h2>Introspection</h2>
         <h3>By: Luiz Bonfá</h3>
@@ -1087,15 +1239,15 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Luiz Bonfá - guitar</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Luiz Bonfá</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -1108,10 +1260,11 @@
           <li>Missal (Estudo) (3:45)</li>
           <li>Adventures In Space (5:17)</li>
         </ol>
+        <p>Introspection is a beautiful, intimate solo acoustic guitar recording from bossa nova master Luiz Bonfá. It displays his jaw-dropping technique and delicate melodic sensibility.</p>
       </main>
     </article>
 
-<article data-popularity="50">
+<article data-popularity="75">
       <header>
         <h2>Visions</h2>
         <h3>By: Grant Green</h3>
@@ -1125,15 +1278,19 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Grant Green - guitar</li>
+          <li>Emanuel Riggins - electric piano</li>
+          <li>Chuck Rainey - bass</li>
+          <li>Idris Muhammad - drums</li>
+          <li>Billy Wooten - vibraphone</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Francis Wolff</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -1146,6 +1303,7 @@
           <li>Never Can Say Goodbye (5:05)</li>
           <li>Blues For Abraham (2:34)</li>
         </ol>
+        <p>Visions is a breezy, melodic soul-jazz session featuring Green's elegant, clean guitar lines. It blends jazz-funk grooves with covers of contemporary pop and soul tracks.</p>
       </main>
     </article>
 
@@ -1163,7 +1321,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1215,7 +1373,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1261,15 +1419,19 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Alice Coltrane - harp, piano</li>
+          <li>Pharoah Sanders - tenor saxophone</li>
+          <li>Joe Henderson - tenor saxophone, flute</li>
+          <li>Ron Carter - bass</li>
+          <li>Ben Riley - drums</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Ed Michel</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -1278,6 +1440,7 @@
           <li>Blue Nile (7:02)</li>
           <li>Mantra (16:36)</li>
         </ol>
+        <p>Ptah, the El Daoud is a spiritual jazz masterpiece featuring a legendary dual-tenor lineup of Pharoah Sanders and Joe Henderson. It is deeply emotional, bluesy, and transcendent.</p>
       </main>
     </article>
 
@@ -1295,7 +1458,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1347,7 +1510,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1389,21 +1552,30 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Miles Davis - trumpet</li>
+          <li>Wayne Shorter - soprano saxophone</li>
+          <li>John McLaughlin - electric guitar</li>
+          <li>Chick Corea - electric piano</li>
+          <li>Herbie Hancock - electric piano</li>
+          <li>Joe Zawinul - organ</li>
+          <li>Dave Holland - double bass</li>
+          <li>Tony Williams - drums</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Teo Macero</li>
+          <li>Recorded by Stan Tonkel</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
           <li>Shhh / Peaceful (18:15)</li>
           <li>In a Silent Way (19:53)</li>
         </ol>
+        <p>In a Silent Way is the revolutionary beginning of Miles Davis's electric period. Blending ambient soundscapes with jazz improvisation, it pioneered the jazz-fusion genre.</p>
       </main>
     </article>
 
@@ -1421,20 +1593,71 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Pharoah Sanders - tenor saxophone</li>
+          <li>Leon Thomas - vocals, percussion</li>
+          <li>Julius Watkins - French horn</li>
+          <li>James Spaulding - flute</li>
+          <li>Lonnie Liston Smith - piano</li>
+          <li>Reggie Workman - bass</li>
+          <li>Richard Davis - bass</li>
+          <li>Billy Hart - drums</li>
+          <li>Nathaniel Bettis - percussion</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Bob Thiele</li>
+          <li>Recorded by Bob Simpson</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
           <li>The Creator Has A Master Plan (32:48)</li>
           <li>Colors (5:38)</li>
+        </ol>
+        <p>Karma is a landmark spiritual jazz recording featuring the side-long epic 'The Creator Has a Master Plan.' Leon Thomas's yodeling vocals and Sanders's fiery sax lines create an ecstatic experience.</p>
+      </main>
+    </article>
+
+<article data-popularity="88">
+      <header>
+        <h2>The Real McCoy</h2>
+        <h3>By: McCoy Tyner</h3>
+        <h3>Released: 1967</h3>
+        <h3>Genre: Jazz</h3>
+      </header>
+      <div class="playerContainer">
+        <lite-youtube params="rel=0&amp;modestbranding=1&amp;enablejsapi=1&amp;autoplay=0"
+          videoid="0zdoOyeRTCA"
+          playlistid="OLAK5uy_nAgZjFc0NsyTJtzb1Xmigma7J4qf-M-Ow"
+          posterquality="maxresdefault"
+        ></lite-youtube>
+      </div>
+      <button class="toggle-details-btn">Expand</button>
+      <main>
+        <h3>Musicians:</h3>
+        <ul>
+          <li>McCoy Tyner – piano</li>
+          <li>Joe Henderson – tenor saxophone</li>
+          <li>Ron Carter – bass</li>
+          <li>Elvin Jones – drums</li>
+        </ul>
+        <h3>Production Credits:</h3>
+        <ul>
+          <li>Produced by Alfred Lion</li>
+          <li>Recorded on April 21, 1967 at Van Gelder Studio, Englewood Cliffs, NJ</li>
+          <li>Engineered by Rudy Van Gelder</li>
+          <li>Album design by Reid Miles</li>
+        </ul>
+        <h3>Track List:</h3>
+        <ol>
+          <li>Passion Dance (8:48)</li>
+          <li>Contemplation (9:13)</li>
+          <li>Four By Five (6:38)</li>
+          <li>Search For Peace (6:32)</li>
+          <li>Blues On The Corner (6:01)</li>
         </ol>
       </main>
     </article>
@@ -1453,15 +1676,18 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Wayne Shorter - tenor saxophone</li>
+          <li>Herbie Hancock - piano</li>
+          <li>Reggie Workman - bass</li>
+          <li>Joe Chambers - drums</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Alfred Lion</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -1473,6 +1699,7 @@
           <li>Chief Crazy Horse (7:35)</li>
           <li>The Collector (6:55)</li>
         </ol>
+        <p>Adam's Apple is a quintessential Blue Note post-bop session, featuring the definitive recording of Shorter's classic composition 'Footprints' and brilliant support from Herbie Hancock.</p>
       </main>
     </article>
 
@@ -1490,15 +1717,20 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Wayne Shorter - tenor saxophone</li>
+          <li>Freddie Hubbard - trumpet</li>
+          <li>Herbie Hancock - piano</li>
+          <li>Ron Carter - bass</li>
+          <li>Elvin Jones - drums</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Alfred Lion</li>
+          <li>Recorded by Rudy Van Gelder</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -1510,6 +1742,7 @@
           <li>Wild Flower (Remastered1998/Rudy Van Gelder Edition) (6:07)</li>
           <li>Dance Cadaverous (Alternate Take / Remastered1998/Rudy Van Gelder Edition) (6:36)</li>
         </ol>
+        <p>Speak No Evil is widely considered one of the greatest post-bop albums in history, combining Shorter's dark, mysterious compositions with a stellar backing group.</p>
       </main>
     </article>
 
@@ -1527,7 +1760,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1584,7 +1817,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1621,7 +1854,7 @@
       </main>
     </article>
 
-<article data-popularity="50">
+<article data-popularity="78">
       <header>
         <h2>Guitar Forms</h2>
         <h3>By: Kenny Burrell</h3>
@@ -1635,15 +1868,17 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Kenny Burrell - guitar</li>
+          <li>Gil Evans Orchestra</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Creed Taylor</li>
+          <li>Arranged and conducted by Gil Evans</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -1657,10 +1892,11 @@
           <li>Last Night When We Were Young (4:32)</li>
           <li>Breadwinner (Master Take) (2:51)</li>
         </ol>
+        <p>Guitar Forms is a stunning collaboration between guitarist Kenny Burrell and arranger Gil Evans. It showcases Burrell's versatility across classical, Spanish, and blues-drenched jazz styles.</p>
       </main>
     </article>
 
-<article data-popularity="50">
+<article data-popularity="84">
       <header>
         <h2>Solo Monk</h2>
         <h3>By: Thelonious Monk</h3>
@@ -1674,15 +1910,15 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Thelonious Monk - piano</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Teo Macero</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -1708,6 +1944,7 @@
           <li>Everything Happens To Me (Re-Take 1) (5:19)</li>
           <li>Ask Me Now (Take 1) (3:44)</li>
         </ol>
+        <p>Solo Monk is a delightful, idiosyncratic collection of solo piano standards and originals. It features Monk's stride-piano roots and his signature angular, percussive phrasing.</p>
       </main>
     </article>
 
@@ -1725,15 +1962,20 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Herbie Hancock - piano</li>
+          <li>Freddie Hubbard - trumpet</li>
+          <li>George Coleman - tenor saxophone</li>
+          <li>Ron Carter - bass</li>
+          <li>Tony Williams - drums</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Alfred Lion</li>
+          <li>Recorded by Rudy Van Gelder</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -1743,6 +1985,7 @@
           <li>Survival Of The Fittest (10:04)</li>
           <li>Dolphin Dance (9:17)</li>
         </ol>
+        <p>Maiden Voyage is a legendary oceanic concept album, defining the modal post-bop sound of the 1960s with its spacious, floating harmonic structures.</p>
       </main>
     </article>
 
@@ -1760,7 +2003,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1812,7 +2055,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -1875,15 +2118,18 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Wayne Shorter - tenor saxophone</li>
+          <li>McCoy Tyner - piano</li>
+          <li>Reggie Workman - bass</li>
+          <li>Elvin Jones - drums</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Alfred Lion</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -1896,6 +2142,7 @@
           <li>Juju (Alternate Take) (7:51)</li>
           <li>House Of Jade (Alternate Take) (6:40)</li>
         </ol>
+        <p>Juju is a powerful modal jazz masterwork driven by the intense rhythm section of McCoy Tyner, Reggie Workman, and Elvin Jones. It highlights Shorter's expressive tenor voice.</p>
       </main>
     </article>
 
@@ -1913,15 +2160,24 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Horace Silver - piano</li>
+          <li>Blue Mitchell - trumpet</li>
+          <li>Junior Cook - tenor saxophone</li>
+          <li>Gene Taylor - bass</li>
+          <li>Roy Brooks - drums</li>
+          <li>Joe Henderson - tenor saxophone</li>
+          <li>Carmell Jones - trumpet</li>
+          <li>Teddy Smith - bass</li>
+          <li>Roger Humphries - drums</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Alfred Lion</li>
+          <li>Recorded by Rudy Van Gelder</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -1936,6 +2192,7 @@
           <li>Sighin' and Cryin' (5:26)</li>
           <li>Silver Treads Among the Soul (3:54)</li>
         </ol>
+        <p>Song for My Father is Silver's signature hard-bop masterpiece, heavily inspired by Cape Verdean folk music. Its catchy, groove-based title track remains a beloved jazz standard.</p>
       </main>
     </article>
 
@@ -1953,15 +2210,20 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Eric Dolphy - alto saxophone, flute, bass clarinet</li>
+          <li>Freddie Hubbard - trumpet</li>
+          <li>Bobby Hutcherson - vibraphone</li>
+          <li>Richard Davis - bass</li>
+          <li>Tony Williams - drums</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Alfred Lion</li>
+          <li>Recorded by Rudy Van Gelder</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -1971,6 +2233,7 @@
           <li>Out To Lunch (12:10)</li>
           <li>Straight Up And Down (8:20)</li>
         </ol>
+        <p>Out to Lunch! is Dolphy's absolute avant-garde masterpiece. Combining vibraphone, flute, and off-kilter rhythms, it is a brilliant exploration of free-leaning post-bop.</p>
       </main>
     </article>
 
@@ -1988,7 +2251,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2049,7 +2312,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2103,7 +2366,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2149,7 +2412,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2204,7 +2467,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2261,7 +2524,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2307,7 +2570,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2352,7 +2615,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2410,15 +2673,20 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Chet Baker - trumpet</li>
+          <li>Bobby Jaspar - tenor saxophone, flute</li>
+          <li>René Thomas - guitar</li>
+          <li>Amedeo Tommasi - piano</li>
+          <li>Benoit Quersin - bass</li>
+          <li>Daniel Humair - drums</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Enzo Harvey</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -2431,6 +2699,7 @@
           <li>Ballata In Forma Di Blues (10:04)</li>
           <li>Blues in the Closet (7:43)</li>
         </ol>
+        <p>Chet Is Back! represents Baker's triumphant European return after his release from prison, featuring a stellar, hard-swinging group of Belgian, French, and Italian players.</p>
       </main>
     </article>
 
@@ -2448,7 +2717,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2498,7 +2767,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2550,7 +2819,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2597,7 +2866,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2643,7 +2912,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2678,7 +2947,7 @@
       </main>
     </article>
 
-<article data-popularity="50">
+<article data-popularity="91">
       <header>
         <h2>Eastern Sounds</h2>
         <h3>By: Yusef Lateef</h3>
@@ -2692,15 +2961,19 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Yusef Lateef - tenor saxophone, oboe, flute, xun</li>
+          <li>Barry Harris - piano</li>
+          <li>Ernie Farrow - double bass, rabab</li>
+          <li>Lex Humphries - drums</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Esmond Edwards</li>
+          <li>Recorded by Rudy Van Gelder</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -2714,6 +2987,7 @@
           <li>Love Theme From The Robe (4:03)</li>
           <li>The Three Faces Of Balal (2:24)</li>
         </ol>
+        <p>Eastern Sounds is a magnificent, spiritual album featuring Lateef's usage of Middle Eastern and Asian instruments like the oboe, flute, and xun inside a hard-bop framework.</p>
       </main>
     </article>
 
@@ -2726,12 +3000,12 @@
       </header>
       <div class="playerContainer">
         <lite-youtube params="rel=0&modestbranding=1&enablejsapi=1&autoplay=0"
-          videoid="_yXe5wSDYOU"
-          playlistid="PLbnJYtsl3xphPyG4AcC_v7kwzuax5JwDE"
+          videoid="OVEOf7VCNgs"
+          playlistid="OLAK5uy_mhg4UL7_RVsi-JGnU6tGOofshyWRvprao"
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2773,7 +3047,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2819,7 +3093,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2862,7 +3136,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2908,7 +3182,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -2939,7 +3213,7 @@
       </main>
     </article>
 
-<article data-popularity="50">
+<article data-popularity="96">
       <header>
         <h2>Moanin'</h2>
         <h3>By: Art Blakey</h3>
@@ -2953,15 +3227,20 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Art Blakey - drums</li>
+          <li>Lee Morgan - trumpet</li>
+          <li>Benny Golson - tenor saxophone</li>
+          <li>Bobby Timmons - piano</li>
+          <li>Jymie Merritt - bass</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Alfred Lion</li>
+          <li>Recorded by Rudy Van Gelder</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -2974,6 +3253,7 @@
           <li>Come Rain Or Come Shine (5:46)</li>
           <li>Moanin' (Alternate Take) (9:20)</li>
         </ol>
+        <p>Moanin' is the definitive hard-bop album, showcasing Blakey's thunderous drums and Lee Morgan's explosive trumpet lines across soul-jazz standards like 'Moanin' and 'Blues March.'</p>
       </main>
     </article>
 
@@ -2991,7 +3271,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -3046,15 +3326,19 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Ornette Coleman - alto saxophone</li>
+          <li>Don Cherry - cornet</li>
+          <li>Charlie Haden - bass</li>
+          <li>Billy Higgins - drums</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Nesuhi Ertegun</li>
+          <li>Recorded by Tom Dowd</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -3065,6 +3349,7 @@
           <li>Congeniality (6:48)</li>
           <li>Chronology (6:04)</li>
         </ol>
+        <p>The Shape of Jazz to Come is the historic album that pioneered free jazz. Removing chordal accompaniment, it focused entirely on expressive, linear improvisation.</p>
       </main>
     </article>
 
@@ -3082,7 +3367,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -3132,7 +3417,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -3185,7 +3470,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -3229,7 +3514,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -3280,15 +3565,20 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Miles Davis - trumpet</li>
+          <li>Cannonball Adderley - alto saxophone</li>
+          <li>John Coltrane - tenor saxophone</li>
+          <li>Red Garland - piano</li>
+          <li>Paul Chambers - bass</li>
+          <li>Philly Joe Jones - drums</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by George Avakian and Teo Macero</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -3299,6 +3589,7 @@
           <li>Billy Boy (Mono Version) (feat. John Coltrane, Cannonball Adderley, Red Garland & Paul Chambers) (7:15)</li>
           <li>Straight, No Chaser (Mono Version) (feat. John Coltrane, Cannonball Adderley, Red Garland & Paul Chambers) (10:42)</li>
         </ol>
+        <p>Milestones is a pivotal modal jazz landmark. Its title track introduced the modal style that Davis would soon perfect on Kind of Blue, driven by Coltrane and Adderley.</p>
       </main>
     </article>
 
@@ -3316,7 +3607,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -3371,7 +3662,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -3412,66 +3703,6 @@
       </main>
     </article>
 
-<article data-popularity="86">
-      <header>
-        <h2>Lady In Satin</h2>
-        <h3>By: Billie Holiday</h3>
-        <h3>Released: June, 1958</h3>
-        <h3>Genre: Vocal Jazz, Traditional Pop</h3>
-      </header>
-      <div class="playerContainer">
-        <lite-youtube params="rel=0&modestbranding=1&enablejsapi=1&autoplay=0"
-          videoid="QtFhUAtQS1s"
-          playlistid="OLAK5uy_nEYBOTpj5uL-vut8xBAiEMwt4GQ-j0uuI"
-          posterquality="maxresdefault"
-        ></lite-youtube>
-      </div>
-      <button class="toggle-details-btn">Collapse</button>
-      <main>
-        <h3>Musicians:</h3>
-        <ul>
-          <li>Billie Holiday - vocals</li>
-          <li>Ray Ellis and His Orchestra:</li>
-          <li>Mal Waldron - piano</li>
-          <li>Barney Kessel - guitar</li>
-          <li>Ben Webster - tenor saxophone</li>
-          <li>Harry Edison - trumpet</li>
-          <li>Joe Comfort - bass</li>
-          <li>Alvin Stoller - drums</li>
-        </ul>
-        <h3>Production Credits:</h3>
-        <ul>
-          <li>Produced by Irving Townsend</li>
-          <li>Recorded on February 20-21, 1958 at Columbia 30th Street Studio in New York City</li>
-          <li>Mastered by George Knuerr</li>
-          <li>Album design by Bill Putnam</li>
-        </ul>
-        <h3>Track List:</h3>
-        <ol>
-          <li>I'm a Fool to Want You (3:25)</li>
-          <li>For Heaven's Sake (3:27)</li>
-          <li>You Don't Know What Love Is (3:50)</li>
-          <li>I Get Along Without You Very Well (Except Sometimes) (3:42)</li>
-          <li>For All We Know (2:53)</li>
-          <li>Violets for Your Furs (3:24)</li>
-          <li>You've Changed (3:18)</li>
-          <li>It's Easy to Remember (3:32)</li>
-          <li>But Beautiful (3:31)</li>
-          <li>Glad to Be Unhappy (4:07)</li>
-        </ol>
-        <p>Lady in Satin is Billie Holiday's penultimate album and considered one of her finest. The album was recorded
-          in February 1958, and it was one of the last projects for Holiday before her untimely death in July 1959. The
-          album was produced by Irving Townsend, and the arrangements were done by Ray Ellis, who used a large string
-          section to create a lush, melancholy sound that matched Holiday's fragile, haunting vocals.</p>
-        <p> Lady in Satin received mixed reviews upon its release but has since become a classic, with critics
-          appreciating Holiday's raw and vulnerable performance. The album's recording technique was groundbreaking for
-          its time, as it used a unique microphone that allowed the singer to move freely around the studio, creating an
-          intimate atmosphere. </p>
-        <p>Despite some criticism at the time, Lady in Satin is now widely considered one of Billie Holiday's best works
-          and an essential album for fans of jazz and vocal music.</p>
-      </main>
-    </article>
-
 <article data-popularity="89">
       <header>
         <h2>Art Pepper Meets the Rhythm Section</h2>
@@ -3486,15 +3717,19 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
-          <li>(Add musicians manually)</li>
+          <li>Art Pepper - alto saxophone</li>
+          <li>Red Garland - piano</li>
+          <li>Paul Chambers - bass</li>
+          <li>Philly Joe Jones - drums</li>
         </ul>
         <h3>Production Credits:</h3>
         <ul>
-          <li>(Add production credits manually)</li>
+          <li>Produced by Lester Koenig</li>
+          <li>Recorded by Roy DuNann</li>
         </ul>
         <h3>Track List:</h3>
         <ol>
@@ -3508,6 +3743,7 @@
           <li>Star Eyes (5:11)</li>
           <li>Birks Works (4:17)</li>
         </ol>
+        <p>Art Pepper Meets the Rhythm Section is a classic cool-jazz recording made under legendary pressure. Backed by Miles Davis's rhythm section, Pepper delivers an inspired, lyrical performance.</p>
       </main>
     </article>
 
@@ -3525,7 +3761,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -3577,11 +3813,11 @@
       <div class="playerContainer">
         <lite-youtube params="rel=0&modestbranding=1&enablejsapi=1&autoplay=0"
           videoid="7r77GLcGlvQ"
-          playlistid="PLx_OwX8qVcot_9Wk_9OzQF4JYZCjUrcFs"
+          playlistid="OLAK5uy_m76f3uPCLwxiPqX6ZEMXGW38ofTfa8s_4"
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -3625,7 +3861,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -3667,7 +3903,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -3695,6 +3931,98 @@
       </main>
     </article>
 
+<article data-popularity="85">
+      <header>
+        <h2>Django</h2>
+        <h3>By: The Modern Jazz Quartet</h3>
+        <h3>Released: 1956</h3>
+        <h3>Genre: Jazz, Cool Jazz</h3>
+      </header>
+      <div class="playerContainer">
+        <lite-youtube params="rel=0&amp;modestbranding=1&amp;enablejsapi=1&amp;autoplay=0"
+          videoid="wXnkD7_5vqM"
+          playlistid="OLAK5uy_kzTwyWBz9Wgm2tCTGvSXoYvexAk43i8p4"
+          posterquality="maxresdefault"
+        ></lite-youtube>
+      </div>
+      <button class="toggle-details-btn">Expand</button>
+      <main>
+        <h3>Musicians:</h3>
+        <ul>
+          <li>John Lewis – piano</li>
+          <li>Milt Jackson – vibraphone</li>
+          <li>Percy Heath – bass</li>
+          <li>Kenny Clarke – drums (tracks 1–4, 8)</li>
+          <li>Connie Kay – drums (tracks 5–7)</li>
+        </ul>
+        <h3>Production Credits:</h3>
+        <ul>
+          <li>Produced by Bob Weinstock</li>
+          <li>Recorded in New York City (June 25, 1953; Dec 23, 1954; Jan 9, 1955)</li>
+          <li>Engineered by Rudy Van Gelder</li>
+          <li>Album design by Hanns Heinz</li>
+        </ul>
+        <h3>Track List:</h3>
+        <ol>
+          <li>Django (7:04)</li>
+          <li>ワン・ベース・ヒット - One Bass Hit (3:00)</li>
+          <li>La Ronde Suite (9:37)</li>
+          <li>The Queen's Fancy (3:13)</li>
+          <li>Delaunay's Dilemma (3:59)</li>
+          <li>Autumn In New York (3:40)</li>
+          <li>バット・ノット・フォー・ミー - But Not For Me (3:44)</li>
+          <li>Milano (4:23)</li>
+        </ol>
+      </main>
+    </article>
+
+<article data-popularity="83">
+      <header>
+        <h2>Diz and Getz</h2>
+        <h3>By: Dizzy Gillespie and Stan Getz</h3>
+        <h3>Released: 1955</h3>
+        <h3>Genre: Jazz</h3>
+      </header>
+      <div class="playerContainer">
+        <lite-youtube params="rel=0&amp;modestbranding=1&amp;enablejsapi=1&amp;autoplay=0"
+          videoid="UMgQc77PTa8"
+          playlistid="OLAK5uy_m6gpPRVUtt_RIyuSLQ_AUYAMTnxh8Nvz4"
+          posterquality="maxresdefault"
+        ></lite-youtube>
+      </div>
+      <button class="toggle-details-btn">Expand</button>
+      <main>
+        <h3>Musicians:</h3>
+        <ul>
+          <li>Dizzy Gillespie – trumpet</li>
+          <li>Stan Getz – tenor saxophone</li>
+          <li>Oscar Peterson – piano</li>
+          <li>Herb Ellis – guitar</li>
+          <li>Ray Brown – bass</li>
+          <li>Max Roach – drums (tracks 1-4)</li>
+          <li>Shelly Manne – drums (tracks 5-8)</li>
+        </ul>
+        <h3>Production Credits:</h3>
+        <ul>
+          <li>Produced by Norman Granz</li>
+          <li>Recorded on December 9, 1953 and June 2, 1954 in Los Angeles, CA</li>
+          <li>Album design by David Stone Martin</li>
+        </ul>
+        <h3>Track List:</h3>
+        <ol>
+          <li>It Don't Mean A Thing (If It Ain't Got That Swing) (6:41)</li>
+          <li>I Let A Song Go Out Of My Heart (6:20)</li>
+          <li>Exactly Like You (5:02)</li>
+          <li>It's The Talk Of The Town (6:49)</li>
+          <li>Impromptu (7:51)</li>
+          <li>One Alone (3:05)</li>
+          <li>Girl Of My Dreams (3:20)</li>
+          <li>Siboney (Pt. 1) (4:27)</li>
+          <li>Siboney (Pt. 2) (4:11)</li>
+        </ol>
+      </main>
+    </article>
+
 <article data-popularity="82">
       <header>
         <h2>The Magnificent Charlie Parker</h2>
@@ -3709,7 +4037,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -3756,7 +4084,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -3812,7 +4140,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -3871,7 +4199,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -3933,7 +4261,7 @@
           posterquality="maxresdefault"
         ></lite-youtube>
       </div>
-      <button class="toggle-details-btn">Collapse</button>
+      <button class="toggle-details-btn">Expand</button>
       <main>
         <h3>Musicians:</h3>
         <ul>
@@ -3965,7 +4293,7 @@
     </article>
   </section>
   <footer>
-    <p>2023</p>
+    <p>Made in 2023</p>
   </footer>
 </body>
 

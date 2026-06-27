@@ -3,34 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jazz Fuzz - Todo Albums</title>
+  <title>Jazz Fuzz</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <style>
     body {
       background-color: #000;
       color: #fff;
       font-family: monospace;
-      padding: 5% 10%;
+      padding: 0 10% 5% 10%;
       margin: 0;
+    }
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      background-color: #000;
+      z-index: 100;
+      padding-top: 15px;
+      padding-bottom: 5px;
+    }
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
     }
     h1 {
       font-size: 24px;
-      margin-bottom: 5px;
+      margin: 0;
       letter-spacing: -0.5px;
     }
     p {
       color: #888;
-      margin-bottom: 30px;
+      margin-top: 0;
+      margin-bottom: 10px;
       font-size: 13px;
     }
     .nav-links {
-      margin-bottom: 20px;
       font-size: 13px;
     }
     .nav-links a {
       color: #fff;
       text-decoration: underline;
-      margin-right: 15px;
+      margin-left: 15px;
     }
     .nav-links a:hover {
       color: #ccc;
@@ -52,6 +66,10 @@
       user-select: none;
       text-transform: uppercase;
       font-size: 11px;
+      position: sticky;
+      top: 85px;
+      background-color: #000;
+      z-index: 90;
     }
     th:hover {
       color: #fff;
@@ -73,15 +91,15 @@
   </style>
 </head>
 <body>
-  <div class="nav-links">
-    <a href="index.html">← Back to Catalog</a>
-    <a href="glossary.html">Glossary Index</a>
-    <a href="https://github.com/jake-g/jazzfuzz/edit/main/albums_todo.tsv" target="_blank" style="float: right;">Suggest Additions on GitHub ↗</a>
-  </div>
-  <h1>Todo Albums Queue</h1>
-  <p>A list of albums queued for evaluation, researched with library ratings and popularity scores. Click headers to sort.</p>
+  <header class="sticky-header">
+    <div class="header-top">
+      <h1 id="page-heading">Loading...</h1>
+      <div class="nav-links" id="nav-links-container"></div>
+    </div>
+    <p id="page-description"></p>
+  </header>
 
-  <table id="todo-table">
+  <table id="data-table">
     <thead>
       <tr id="table-headers"></tr>
     </thead>
@@ -91,13 +109,48 @@
   </table>
 
   <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const view = urlParams.get('view') || 'queue';
+
+    const config = {
+      queue: {
+        title: "Jazz Fuzz - Queue",
+        heading: "Queue",
+        description: "A list of albums queued for evaluation, researched with library ratings and popularity scores. Click headers to sort.",
+        tsvFile: "albums_todo.tsv",
+        navLinks: `
+          <a href="index.html">← Back to Catalog</a>
+          <a href="list.html?view=glossary">Glossary</a>
+          <a href="https://github.com/jake-g/jazzfuzz/edit/main/albums_todo.tsv" target="_blank">Suggest Additions ↗</a>
+        `
+      },
+      glossary: {
+        title: "Jazz Fuzz - Album Glossary",
+        heading: "Album Glossary",
+        description: "A structured index of all albums currently reviewed on the site. Click headers to sort.",
+        tsvFile: "albums_glossary.tsv",
+        navLinks: `
+          <a href="index.html">← Back to Catalog</a>
+          <a href="list.html?view=queue">Queue</a>
+        `
+      }
+    };
+
+    const currentConfig = config[view] || config.queue;
+
+    // Apply configuration dynamically
+    document.title = currentConfig.title;
+    document.getElementById('page-heading').textContent = currentConfig.heading;
+    document.getElementById('page-description').textContent = currentConfig.description;
+    document.getElementById('nav-links-container').innerHTML = currentConfig.navLinks;
+
     let currentData = [];
     let headers = [];
     let sortDirection = {};
 
     async function loadTable() {
       try {
-        const response = await fetch('albums_todo.tsv');
+        const response = await fetch(currentConfig.tsvFile);
         const tsvText = await response.text();
         parseAndRender(tsvText);
       } catch (error) {

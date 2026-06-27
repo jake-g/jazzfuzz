@@ -103,7 +103,9 @@ class MaintenanceTest(unittest.TestCase):
             "Miles Davis\tKind of Blue\t5.0\n"
             "John Coltrane\tA Love Supreme\t4.5\n"
         )
-        with mock.patch("builtins.open", mock.mock_open(read_data=read_data)) as mock_file:
+        with mock.patch(
+            "builtins.open", mock.mock_open(read_data=read_data)
+        ) as mock_file:
             tracks = maintenance.load_musicbee_tracks("dummy_path")
             self.assertEqual(len(tracks), 2)
             self.assertEqual(tracks[0]["artist"], "Miles Davis")
@@ -118,21 +120,17 @@ class MaintenanceTest(unittest.TestCase):
             [
                 {"artist": "Miles Davis", "album": "In a Silent Way", "rating": 5.0},
                 {"artist": "Miles Davis", "album": "In a Silent Way", "rating": 4.0},
-                {"artist": "Miles Davis", "album": "Bitches Brew", "rating": 3.0}
+                {"artist": "Miles Davis", "album": "Bitches Brew", "rating": 3.0},
             ],
-            [] # inbox empty
+            [],  # inbox empty
         ]
 
-        read_data = (
-            "Album\tArtist\n"
-            "In a Silent Way\tMiles Davis\n"
-        )
+        read_data = "Album\tArtist\n" "In a Silent Way\tMiles Davis\n"
         m_open = mock.mock_open(read_data=read_data)
         with mock.patch("builtins.open", m_open) as mock_file:
             maintenance.research_todos("todo.tsv", "lib.tsv", "inbox.tsv")
             # Verify open was called to write the output
             mock_file.assert_any_call("todo.tsv", "w", encoding="utf-8", newline="")
-
 
     def test_sort_tsv_file_by_criteria(self):
         import tempfile
@@ -156,8 +154,8 @@ class MaintenanceTest(unittest.TestCase):
 
             self.assertEqual(len(lines), 4)
             self.assertIn("Kind of Blue", lines[1])  # Dec 1959 (tie-breaker pop 100)
-            self.assertIn("Time Out", lines[2])      # Dec 1959 (tie-breaker pop 98)
-            self.assertIn("Moanin'", lines[3])       # Jan 1959 (tie-breaker pop 95)
+            self.assertIn("Time Out", lines[2])  # Dec 1959 (tie-breaker pop 98)
+            self.assertIn("Moanin'", lines[3])  # Jan 1959 (tie-breaker pop 95)
         finally:
             os.remove(path)
 

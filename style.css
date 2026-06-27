@@ -12,13 +12,44 @@ body {
   color: #fff;
 }
 
-header {
-  position: sticky;
+body > header {
+  position: fixed;
   top: 0;
+  left: 0;
+  width: 100%;
   z-index: 1000;
   background-color: #000;
   border-bottom: 1px solid #222;
-  padding: 20px;
+  padding: 8px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+body > header h1 {
+  font-size: 2.7em;
+  margin: 0;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+#posts {
+  padding-top: 0;
 }
 
 footer {
@@ -56,6 +87,7 @@ article {
   border-top: 1px solid #333;
   padding: 30px 20px;
   margin-bottom: 0;
+  scroll-margin-top: 95px;
 }
 
 h1 {
@@ -76,26 +108,30 @@ h3 {
 
 /* hide by default */
 main {
-  display: block;
+  display: none;
 }
 
 nav {
-  position: fixed;
-  top: 15px;
-  right: 5%;
-  z-index: 999;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0;
+  gap: 4px;
 }
 
 .menu-container {
   display: flex;
+  align-items: center;
   gap: 10px;
-  background-color: transparent;
-  padding: 0;
-  border: none;
+}
+
+.player-controls-group {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-buttons-group {
+  display: flex;
+  gap: 10px;
 }
 
 .menu-links {
@@ -139,6 +175,19 @@ nav {
   border-color: #fff;
 }
 
+.menu-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.player-separator {
+  color: #222;
+  align-self: center;
+  font-size: 14px;
+  margin: 0 5px;
+}
+
 .control-panel {
   background-color: rgba(15, 15, 15, 0.98);
   border: 1px solid #333;
@@ -149,6 +198,8 @@ nav {
   font-family: monospace;
   text-align: left;
   backdrop-filter: blur(15px);
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .panel-title {
@@ -237,4 +288,109 @@ button:active {
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+.toc-list {
+  max-height: 350px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 10px;
+}
+
+.toc-item {
+  color: #ccc !important;
+  text-decoration: none;
+  font-size: 11px;
+  padding: 4px 6px;
+  display: block !important;
+  border-bottom: 1px solid #222;
+  transition: all 0.15s ease;
+}
+
+.toc-item:hover {
+  background-color: #222 !important;
+  color: #fff !important;
+  border-color: #444 !important;
+}
+
+#intro {
+  margin-top: 80px;
+  padding: 0 20px 20px 20px;
+  font-family: monospace;
+  color: #888;
+  font-size: 13px;
+  max-width: 800px;
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  body > header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 15px;
+    height: auto;
+    border-bottom: 1px solid #222;
+    box-sizing: border-box;
+  }
+
+  .header-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 8px;
+    gap: 4px;
+  }
+
+  .header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+  }
+
+  body > header h1 {
+    font-size: 2em;
+    margin: 0;
+  }
+
+  .menu-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .player-separator {
+    display: none;
+  }
+
+  .nav-buttons-group {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .menu-links {
+    margin-top: 2px;
+    margin-right: 0;
+  }
+
+  #intro {
+    margin-top: 175px !important;
+  }
+}
+
+.share-btn {
+  margin-left: 10px;
 }

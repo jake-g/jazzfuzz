@@ -1,5 +1,36 @@
 // Setup and interaction handlers for Jazz Fuzz site
 $(document).ready(function () {
+  // Initialize unique article IDs on page load & append Share button next to Expand
+  $("#posts").children("article").each(function () {
+    var art = $(this);
+    var title = art.find("header h2").text().trim();
+    var artist = art.find("header h3:contains('By:')").text().replace("By:", "").trim();
+    var id = "album-" + (artist + "-" + title).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    art.attr("id", id);
+
+    var expandBtn = art.find(".toggle-details-btn");
+    var shareBtn = $('<button class="share-btn" title="Copy link to this album">Share</button>');
+    expandBtn.after(shareBtn);
+  });
+
+  // Share button click handler
+  $("#posts").on("click", ".share-btn", function () {
+    var button = $(this);
+    var article = button.closest("article");
+    var id = article.attr("id");
+    var shareUrl = window.location.origin + window.location.pathname + "#" + id;
+
+    navigator.clipboard.writeText(shareUrl).then(function () {
+      var originalText = button.text();
+      button.text("Copied!");
+      setTimeout(function () {
+        button.text(originalText);
+      }, 1500);
+    }).catch(function (err) {
+      console.error("Could not copy link to clipboard: ", err);
+    });
+  });
+
   // Collapse details handler (Global)
   $("#collapse-main").click(function () {
     var button = $(this);
@@ -14,6 +45,11 @@ $(document).ready(function () {
       $(".toggle-details-btn").text("Collapse");
       button.text("Collapse");
     }
+  });
+
+  $("#scroll-top-link").click(function (e) {
+    e.preventDefault();
+    $("html, body").animate({ scrollTop: 0 }, 400);
   });
 
   // Individual toggle details handler
@@ -35,6 +71,8 @@ $(document).ready(function () {
     $("#sort-panel").slideToggle(150);
     $("#filter-menu-btn").removeClass("active");
     $("#filter-panel").slideUp(150);
+    $("#albums-menu-btn").removeClass("active");
+    $("#albums-panel").slideUp(150);
   });
 
   // Filter Panel Toggle
@@ -43,27 +81,59 @@ $(document).ready(function () {
     $("#filter-panel").slideToggle(150);
     $("#sort-menu-btn").removeClass("active");
     $("#sort-panel").slideUp(150);
+    $("#albums-menu-btn").removeClass("active");
+    $("#albums-panel").slideUp(150);
   });
+
+  // Albums Panel Toggle
+  $("#albums-menu-btn").click(function () {
+    $(this).toggleClass("active");
+    $("#albums-panel").slideToggle(150);
+    $("#sort-menu-btn").removeClass("active");
+    $("#sort-panel").slideUp(150);
+    $("#filter-menu-btn").removeClass("active");
+    $("#filter-panel").slideUp(150);
+    if ($(this).hasClass("active")) {
+      populateAlbumsTOC();
+    }
+  });
+
+  // Albums TOC item click handler (Smooth Scroll to Album)
+  $("#albums-toc-list").on("click", ".toc-item", function (e) {
+    e.preventDefault();
+    var targetId = $(this).attr("href");
+    var targetOffset = $(targetId).offset().top - 80; // Offset by sticky header height
+    $("html, body").animate({ scrollTop: targetOffset }, 400);
+
+    // Auto-close panel
+    $("#albums-panel").slideUp(150);
+    $("#albums-menu-btn").removeClass("active");
+  });
+
+  function splitArtists(artistStr) {
+    if (!artistStr) return [];
+    var normalized = artistStr
+      .replace(/\s+featuring\s+/gi, ", ")
+      .replace(/\s+feat\.\s+/gi, ", ")
+      .replace(/\s+and\s+/gi, ", ")
+      .replace(/\s+&\s+/g, ", ");
+    return normalized
+      .split(",")
+      .map(function (a) { return a.trim(); })
+      .filter(function (a) { return a.length > 0; });
+  }
 
   // --- SORTING LOGIC ---
   function sortPosts(sortBy) {
     var posts = $("#posts").children("article");
     posts.sort(function (a, b) {
       if (sortBy === "artist") {
-        var artistA = $(a)
-          .find("header h3:contains('By')")
-          .text()
-          .trim()
-          .split(": ")
-          .pop()
-          .toUpperCase();
-        var artistB = $(b)
-          .find("header h3:contains('By')")
-          .text()
-          .trim()
-          .split(": ")
-          .pop()
-          .toUpperCase();
+        var rawA = $(a).find("header h3:contains('By')").text().trim().split(": ").pop();
+        var rawB = $(b).find("header h3:contains('By')").text().trim().split(": ").pop();
+        var subA = splitArtists(rawA);
+        var subB = splitArtists(rawB);
+        var artistA = (subA[0] || "").toUpperCase();
+        var artistB = (subB[0] || "").toUpperCase();
         if (artistA < artistB) {
           return -1;
         }
@@ -82,7 +152,16 @@ $(document).ready(function () {
       } else {
         var popA = parseInt($(a).attr("data-popularity") || "0", 10);
         var popB = parseInt($(b).attr("data-popularity") || "0", 10);
-        return popB - popA; // Descending (highest popularity first)
+        if (popB !== popA) {
+          return popB - popA;
+        }
+        var yearAStr = $(a).find("header h3:contains('Released:')").text();
+        var yearBStr = $(b).find("header h3:contains('Released:')").text();
+        var matchA = yearAStr.match(/\d{4}/);
+        var matchB = yearBStr.match(/\d{4}/);
+        var yearA = matchA ? parseInt(matchA[0], 10) : 0;
+        var yearB = matchB ? parseInt(matchB[0], 10) : 0;
+        return yearB - yearA;
       }
     });
     $("#posts").empty().append(posts);
@@ -161,13 +240,21 @@ $(document).ready(function () {
           .text()
           .trim()
           .split(": ")
-          .pop()
-          .toLowerCase();
-        matchArtist = activeArtists.has(artistStr);
+          .pop();
+        var subArtists = splitArtists(artistStr).map(function (a) {
+          return a.toLowerCase();
+        });
+        matchArtist = false;
+        activeArtists.forEach(function (a) {
+          if (subArtists.indexOf(a) !== -1) {
+            matchArtist = true;
+          }
+        });
       }
 
       article.toggle(matchDecade && matchGenre && matchArtist);
     });
+    populateAlbumsTOC();
   }
 
   // Handle filter action click
@@ -217,8 +304,8 @@ $(document).ready(function () {
   });
 
   // --- DYNAMICALLY POPULATE FILTERS FROM DOM ---
-  const MAX_GENRES_TO_SHOW = 12;
-  const MAX_ARTISTS_TO_SHOW = 12;
+  const MAX_GENRES_TO_SHOW = 24;
+  const MAX_ARTISTS_TO_SHOW = 24;
 
   function populateFilters() {
     var decadeCounts = {};
@@ -260,7 +347,10 @@ $(document).ready(function () {
         .split(": ")
         .pop();
       if (artistStr) {
-        artistCounts[artistStr] = (artistCounts[artistStr] || 0) + 1;
+        var subArtists = splitArtists(artistStr);
+        subArtists.forEach(function (a) {
+          artistCounts[a] = (artistCounts[a] || 0) + 1;
+        });
       }
     });
 
@@ -324,8 +414,26 @@ $(document).ready(function () {
   // Initial trigger: Sort by popularity
   sortPosts("popularity");
 
+  // Auto-expand and scroll to album if hash anchor is present in URL
+  var hash = window.location.hash;
+  if (hash) {
+    var targetArticle = $(hash);
+    if (targetArticle.length) {
+      targetArticle.find("main").slideDown(150);
+      targetArticle.find(".toggle-details-btn").text("Collapse");
+      setTimeout(function () {
+        var headerHeight = $("header").outerHeight() || 70;
+        var targetOffset = targetArticle.offset().top - (headerHeight + 10);
+        $("html, body").animate({ scrollTop: targetOffset }, 200);
+      }, 300);
+    }
+  }
+
   // Player logic
   let currentPlayer = null;
+  let currentArticle = null;
+  let isShuffle = false;
+  let playbackHistory = [];
   const DEBUG_MODE = true;
 
   function getPlayerStateName(state) {
@@ -346,6 +454,154 @@ $(document).ready(function () {
     }
   }
 
+  function updatePlayerControls(isPlaying) {
+    $("#play-pause-btn").text(isPlaying ? "||" : ">");
+    $("#shuffle-btn").toggleClass("active", isShuffle);
+    if (currentArticle) {
+      var visibleArticles = $("#posts").children("article:visible");
+      var currentIndex = visibleArticles.index(currentArticle);
+      if (isShuffle) {
+        $("#prev-btn").prop("disabled", playbackHistory.length === 0);
+        $("#next-btn").prop("disabled", visibleArticles.length <= 1);
+      } else {
+        $("#prev-btn").prop("disabled", currentIndex <= 0);
+        $("#next-btn").prop("disabled", currentIndex >= visibleArticles.length - 1);
+      }
+    } else {
+      $("#prev-btn").prop("disabled", true);
+      $("#next-btn").prop("disabled", true);
+    }
+  }
+
+  function playNextTrack() {
+    var visibleArticles = $("#posts").children("article:visible");
+    if (visibleArticles.length === 0) return;
+
+    if (isShuffle) {
+      var candidates = visibleArticles;
+      if (currentArticle) {
+        candidates = visibleArticles.not(currentArticle);
+      }
+      if (candidates.length > 0) {
+        var randomIndex = Math.floor(Math.random() * candidates.length);
+        var randomArticle = candidates.eq(randomIndex);
+        playArticle(randomArticle);
+      }
+    } else {
+      if (!currentArticle) {
+        playArticle(visibleArticles.first());
+      } else {
+        var currentIndex = visibleArticles.index(currentArticle);
+        if (currentIndex < visibleArticles.length - 1) {
+          var nextArticle = visibleArticles.eq(currentIndex + 1);
+          playArticle(nextArticle);
+        }
+      }
+    }
+  }
+
+  function playPrevTrack() {
+    var visibleArticles = $("#posts").children("article:visible");
+    if (visibleArticles.length === 0) return;
+
+    if (isShuffle) {
+      if (playbackHistory.length > 0) {
+        var prevArticle = playbackHistory.pop();
+        if (prevArticle.is(":visible")) {
+          playArticle(prevArticle, false);
+        } else {
+          playPrevTrack();
+        }
+      }
+    } else {
+      if (currentArticle) {
+        var currentIndex = visibleArticles.index(currentArticle);
+        if (currentIndex > 0) {
+          var prevArticle = visibleArticles.eq(currentIndex - 1);
+          playArticle(prevArticle);
+        }
+      }
+    }
+  }
+
+  function playArticle(article, saveToHistory = true) {
+    if (saveToHistory && currentArticle && currentArticle[0] !== article[0]) {
+      playbackHistory.push(currentArticle);
+    }
+
+    // Collapse other articles' details instantly to avoid layout shifts
+    $("#posts").children("article").not(article).find("main").hide();
+    $("#posts").children("article").not(article).find(".toggle-details-btn").text("Expand");
+
+    // Expand target article's details instantly
+    article.find("main").show();
+    article.find(".toggle-details-btn").text("Collapse");
+
+    // Measure the clean offset and scroll to it
+    var offset = article.offset().top - 70;
+    $("html, body").animate({ scrollTop: offset }, 250);
+
+    var yt = article.find("lite-youtube");
+    if (yt.length) {
+      var existingPlayer = yt.data("ytPlayer");
+      if (existingPlayer && typeof existingPlayer.playVideo === "function") {
+        existingPlayer.playVideo();
+      } else {
+        yt[0].click();
+      }
+    }
+  }
+
+  $("#prev-btn").click(playPrevTrack);
+  $("#next-btn").click(playNextTrack);
+  $("#play-pause-btn").click(function () {
+    if (currentPlayer) {
+      var state = currentPlayer.getPlayerState();
+      if (state === YT.PlayerState.PLAYING) {
+        currentPlayer.pauseVideo();
+      } else {
+        currentPlayer.playVideo();
+      }
+      if (currentArticle) {
+        // Show/focus the currently active song
+        var headerHeight = $("header").outerHeight() || 70;
+        var offset = currentArticle.offset().top - (headerHeight + 10);
+        $("html, body").animate({ scrollTop: offset }, 250);
+      }
+    } else {
+      var firstArticle = $("#posts").children("article:visible").first();
+      if (firstArticle.length) {
+        playArticle(firstArticle);
+      }
+    }
+  });
+
+  $("#shuffle-btn").click(function () {
+    $(this).toggleClass("active");
+    isShuffle = $(this).hasClass("active");
+
+    var isCurrentlyPlaying = false;
+    if (currentPlayer) {
+      try {
+        var state = currentPlayer.getPlayerState();
+        if (state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING) {
+          isCurrentlyPlaying = true;
+        }
+      } catch (e) {}
+    }
+
+    if (!isCurrentlyPlaying) {
+      var visibleArticles = $("#posts").children("article:visible");
+      if (visibleArticles.length) {
+        var randomIndex = Math.floor(Math.random() * visibleArticles.length);
+        var randomArticle = visibleArticles.eq(randomIndex);
+        playArticle(randomArticle);
+      }
+    } else {
+      updatePlayerControls(true);
+    }
+  });
+
   $(".playerContainer").each(function () {
     const playerContainer = this;
     const player = playerContainer.querySelector("lite-youtube");
@@ -360,11 +616,16 @@ $(document).ready(function () {
                 currentPlayer.pauseVideo();
               }
               currentPlayer = ytPlayer;
-            } else if (
-              event.data === YT.PlayerState.PAUSED &&
-              currentPlayer === ytPlayer
-            ) {
-              currentPlayer = null;
+              currentArticle = $(player).closest("article");
+              updatePlayerControls(true);
+            } else if (event.data === YT.PlayerState.PAUSED) {
+              if (currentPlayer === ytPlayer) {
+                updatePlayerControls(false);
+              }
+            } else if (event.data === YT.PlayerState.ENDED) {
+              if (currentPlayer === ytPlayer) {
+                playNextTrack();
+              }
             }
             debugLog(
               `Video State Change: [${player.videoId}] ${getPlayerStateName(
@@ -385,6 +646,41 @@ $(document).ready(function () {
           },
         },
       });
+      $(player).data("ytPlayer", ytPlayer);
     });
   });
+
+  function populateAlbumsTOC() {
+    var tocList = $("#albums-toc-list");
+    tocList.empty();
+
+    var visibleArticles = $("#posts").children("article:visible");
+    if (visibleArticles.length === 0) {
+      tocList.append('<div style="padding: 10px; color: #888; font-size: 11px; font-family: monospace;">No matching albums</div>');
+      return;
+    }
+
+    visibleArticles.each(function (index) {
+      var art = $(this);
+      var title = art.find("header h2").text().trim();
+      var artist = art.find("header h3:contains('By:')").text().replace("By:", "").trim();
+      var yearStr = art.find("header h3:contains('Released:')").text();
+      var match = yearStr.match(/\d{4}/);
+      var year = match ? match[0] : "";
+
+      var id = art.attr("id");
+      if (!id) {
+        id = "album-" + title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        art.attr("id", id);
+      }
+
+      var text = artist + ' - ' + title;
+      if (year) {
+        text += ' (' + year + ')';
+      }
+
+      var tocItem = $('<a href="#' + id + '" class="toc-item">' + text + '</a>');
+      tocList.append(tocItem);
+    });
+  }
 });
